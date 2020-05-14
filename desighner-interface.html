@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  .designer-interface-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 3.3rem;
+    font-size: 1rem;
+    flex: 1;
+    padding: 0 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
+  }
+  .designer-interface-container .designer-interface-btn {
+    cursor: pointer;
+    background: #131313;
+    color: #fff;
+    border-radius: 25px;
+    padding: 4px 30px;
+    width: auto;
+    text-align: center;
+    text-transform: capitalize;
+    font-weight: bold;
+  }
+  .designer-interface-container .designer-interface-btn>input {
+    display: none;
+  }
+</style>
+<body>
+  <div class="designer-interface-container">
+    <div><span class="designer-interface-text">{Upload Your Photo}</span></div>
+    <div>
+      <div class="designer-interface-btn">
+        {Upload Your Photo}
+        <input type="file" name="file">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
