@@ -2,6 +2,8 @@ class Designer {
   constructor(config) {
     this.configCache = this.formatConfig(config);
     this.uniqueId = 'v-' + Number(new Date())
+    this.$container = null;
+    this.$pop = null;
     this._init()
   }
 
@@ -52,21 +54,46 @@ class Designer {
 
     $container.append(
       $fileContainer.append(
-        $fileBtn.append(
-          $fileInput
-        )
+        $fileBtn,$fileInput
       )
     );
+    $fileBtn.on('click', function(){
+      $fileInput.trigger('click');
+    });
+    $fileInput.on('change', function(e){
+      let files = e.target.files
+      if(!files || !files[0]){
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        // const $img = $('<img />');
+        // $container.append($img);
+        //  $img.attr('src', evt.target.result);
+        this.buildDesigner(evt.target.result)
+      }
+      reader.readAsDataURL(files[0]);
+    });
+    this.$container = $container;
 
     $insertionPoint.before($container);
   }
 
   getApp() {
-    return $(`.designer-interface-container[data-v-${this.uniqueId}]`).length > 0
+    return !!this.$container;
+  }
+  getPop() {
+    return !!this.$pop;
   }
 
   getInsertionPoint() {
     const $form = $('.product-page-main form[action="/cart/add"]').length ? $('.product-page-main form[action="/cart/add"]') : $('form[action="/cart/add"]').eq(0);
     return $form.find('button[type="submit"]').eq(0).closest('div');
+  }
+
+  buildDesigner(imgData, opt) {
+    let $pop = this.getPop() ? this.$pop : $(`<div class="designer-pop-container" data-v-${this.uniqueId}>`);
+
+    
   }
 }

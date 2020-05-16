@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+<script src="./designer.js"></script>
 <style>
   .designer-interface-container {
     position: relative;
@@ -30,8 +32,241 @@
     text-transform: capitalize;
     font-weight: bold;
   }
-  .designer-interface-container .designer-interface-btn>input {
+  .designer-interface-container .designer-interface-btn~input {
     display: none;
+  }
+
+  .designer-interface-container .designer-pop-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    margin: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 20002;
+  }
+
+
+  .designer-pop-container .designer-pop-dialog {
+    position: relative;
+    margin: 15vh auto 0;
+    border-radius: 2px;
+    width: fit-content;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .designer-pop-container .designer-pop-header {
+    height: 50px;
+  }
+  .designer-pop-container .designer-pop-body {
+    padding: 25px 25px 30px;
+  }
+  .designer-pop-container .designer-canvas-container {
+    border: 1px solid gray;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .designer-pop-container .designer-canvas-area {
+    position: relative;
+    width: 500px;
+    height: 400px;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC");
+  }
+  .designer-pop-container .designer-canvas-area .designer-background-container {
+    display: inline-flex;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flex;
+    display: -o-inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .designer-pop-container .designer-canvas-img {
+    border: none;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .designer-pop-container .designer-canvas-shadow {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: .5;
+    cursor: move;
+  }
+  .designer-pop-container .designer-view-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 400px;
+    height: 180px;
+    font-size: 0;
+    line-height: 0;
+    cursor: move;
+  }
+  .designer-pop-container .designer-view-box {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    outline: 1px solid #39f;
+    outline-color: rgba(51,153,255,.75);
+  }
+  .designer-pop-container .designer-view-box>img{
+    max-height: none!important;
+    max-width: none!important;
+    min-height: 0!important;
+    min-width: 0!important;
+
+    width: 500px;
+    height: 200px;
+  }
+  .designer-pop-container .designer-dashed {
+    position: absolute;
+    display: block;
+    border: 0 dashed #eee;
+    opacity: .5;
+  }
+  .designer-pop-container .designer-dashed.dashed-center {
+    position: absolute;
+    display: block;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    opacity: .75;
+  }
+  .designer-pop-container .designer-dashed.dashed-center::before,
+  .designer-pop-container .designer-dashed.dashed-center::after {
+    position: absolute;
+    display: block;
+    background-color: #eee;
+    content: " ";
+  }
+  .designer-pop-container .designer-dashed.dashed-center::before {
+    left: -3px;
+    top: 0;
+    width: 7px;
+    height: 1px;
+  }
+  .designer-pop-container .designer-dashed.dashed-center::after {
+    left: 0;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+  }
+
+  .designer-pop-container .designer-dashed.dashed-height {
+    left: 0;
+    top: 33.33333%;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    width: 100%;
+    height: 33.33333%;
+  }
+  .designer-pop-container .designer-dashed.dashed-width {
+    left: 33.33333%;
+    top: 0;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    width: 33.33333%;
+    height: 100%;
+  }
+
+  .designer-pop-container .designer-line {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #39f;
+    opacity: .1;
+  }
+  .designer-pop-container .designer-line.line-left {
+    top: 0;
+    left: -3px;
+    width: 5px;
+    cursor: ew-resize;
+  }
+  .designer-pop-container .designer-line.line-right {
+    top: 0;
+    right: -3px;
+    width: 5px;
+    cursor: ew-resize;
+  }
+  .designer-pop-container .designer-line.line-top {
+    top: -3px;
+    right: 0;
+    height: 5px;
+    cursor: ns-resize;
+  }
+  .designer-pop-container .designer-line.line-bottom {
+    bottom: -3px;
+    right: 0;
+    height: 5px;
+    cursor: ns-resize;
+  }
+  .designer-pop-container .designer-point {
+    position: absolute;
+    display: block;
+    width: 5px;
+    height: 5px;
+    background-color: #39f;
+    opacity: .75;
+  }
+  .designer-pop-container .designer-point.point-w {
+    cursor: ew-resize;
+    left: -3px;
+    top: 50%;
+    margin-top: -3px;
+  }
+  .designer-pop-container .designer-point.point-wn {
+    left: -3px;
+    top: -3px;
+    cursor: nwse-resize;
+  }
+  .designer-pop-container .designer-point.point-n {
+    left: 50%;
+    top: -3px;
+    margin-left: -3px;
+    cursor: ns-resize;
+  }
+  .designer-pop-container .designer-point.point-ne {
+    right: -3px;
+    top: -3px;
+    cursor: nesw-resize;
+  }
+  .designer-pop-container .designer-point.point-e {
+    right: -3px;
+    top: 50%;
+    margin-top: -3px;
+    cursor: ne-resize;
+  }
+  .designer-pop-container .designer-point.point-es {
+    right: -3px;
+    bottom: -3px;
+    cursor: nwse-resize;
+  }
+  .designer-pop-container .designer-point.point-s {
+    left: 50%;
+    margin-left: -3px;
+    bottom: -3px;
+    cursor: ns-resize;
+  }
+  .designer-pop-container .designer-point.point-sw {
+    left: -3px;
+    bottom: -3px;
+    cursor: nesw-resize;
   }
 </style>
 <body>
@@ -40,9 +275,62 @@
     <div>
       <div class="designer-interface-btn">
         {Upload Your Photo}
-        <input type="file" name="file">
+      </div>
+      <input type="file" name="file">
+    </div>
+    <!-- 弹出层 -->
+    <div class="designer-pop-container">
+      <div class="designer-pop-dialog" role="dialog" aria-label="dialog" aria-modal="true">
+        <div class="designer-pop-header">
+          <div><span></span></div>
+          <div><a></a></div>
+        </div>
+        <div class="designer-pop-body">
+          <div class="designer-canvas-container">
+            <div class="designer-canvas-area">
+              <div class="designer-background-container">
+                <img class="designer-canvas-img" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589623616344&di=9d9e9264e56d488fd676c3ae4461af43&imgtype=0&src=http%3A%2F%2Fimages4.c-ctrip.com%2Ftarget%2F2A0k1b000001c4npr55A8_720_480_s.jpg" alt="">
+              </div>
+              <div class="designer-canvas-shadow"></div>
+              <div class="designer-view-container" style="transform: translate(50px, 100px);">
+                <div class="designer-view-box">
+                  <img style="transform: translate(-50px, 0px);" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589623616344&di=9d9e9264e56d488fd676c3ae4461af43&imgtype=0&src=http%3A%2F%2Fimages4.c-ctrip.com%2Ftarget%2F2A0k1b000001c4npr55A8_720_480_s.jpg" alt="">
+                </div>
+                <span class="designer-dashed dashed-width"></span>
+                <span class="designer-dashed dashed-height"></span>
+                <span class="designer-dashed dashed-center"></span>
+                <span class="designer-line line-left"></span>
+                <span class="designer-line line-top"></span>
+                <span class="designer-line line-right"></span>
+                <span class="designer-line line-bottom"></span>
+                <span class="designer-point point-w"></span>
+                <span class="designer-point point-wn"></span>
+                <span class="designer-point point-n"></span>
+                <span class="designer-point point-ne"></span>
+                <span class="designer-point point-e"></span>
+                <span class="designer-point point-es"></span>
+                <span class="designer-point point-s"></span>
+                <span class="designer-point point-sw"></span>
+              </div>
+            </div>
+          </div>
+          <div class="designer-pop-footer">交互按钮</div>
+        </div>
       </div>
     </div>
   </div>
+
+
+  <div>
+    <form action="/cart/add">
+      <div>
+        sss
+        <button type="submit"></button>
+      </div>
+    </form>
+  </div>
+  <script>
+    new Designer();
+  </script>
 </body>
 </html>
