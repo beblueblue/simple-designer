@@ -1,54 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
 <script src="./designer.js"></script>
 <style>
   @font-face {
-  font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?64640s');
-  src:  url('fonts/icomoon.eot?64640s#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?64640s') format('truetype'),
-    url('fonts/icomoon.woff?64640s') format('woff'),
-    url('fonts/icomoon.svg?64640s#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
-  font-display: block;
-}
+    font-family: 'icomoon';
+    src: url('fonts/icomoon.eot?64640s');
+    src: url('fonts/icomoon.eot?64640s#iefix') format('embedded-opentype'),
+      url('fonts/icomoon.ttf?64640s') format('truetype'),
+      url('fonts/icomoon.woff?64640s') format('woff'),
+      url('fonts/icomoon.svg?64640s#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
 
-[class^="designer-icon-"], [class*=" designer-icon-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+  [class^="designer-icon-"],
+  [class*=" designer-icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
 
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-.designer-icon-delete:before {
-  content: "\e900";
-}
-.designer-icon-counterclockwise:before {
-  content: "\e901";
-  color: #525c6a;
-}
-.designer-icon-clockwise:before {
-  content: "\e902";
-  color: #525c6a;
-}
-.designer-icon-loop:before {
-  content: "\ea2e";
-}
+  .designer-icon-delete:before {
+    content: "\e900";
+  }
+
+  .designer-icon-counterclockwise:before {
+    content: "\e901";
+  }
+
+  .designer-icon-clockwise:before {
+    content: "\e902";
+  }
+
+  .designer-icon-loop:before {
+    content: "\ea2e";
+  }
 
   .designer-interface-container {
     position: relative;
@@ -63,6 +67,7 @@
     border-radius: 4px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, .15);
   }
+
   .designer-interface-container .designer-interface-btn {
     cursor: pointer;
     background: #131313;
@@ -74,6 +79,7 @@
     text-transform: capitalize;
     font-weight: bold;
   }
+
   .designer-interface-container .designer-interface-btn~input {
     display: none;
   }
@@ -86,28 +92,31 @@
     bottom: 0;
     overflow: auto;
     margin: 0;
-    background: rgba(0,0,0,.7);
+    background: rgba(0, 0, 0, .7);
     z-index: 20002;
   }
 
 
   .designer-pop-container .designer-pop-dialog {
     position: relative;
-    margin: 15vh auto 0;
+    margin: 5vh auto 0;
     border-radius: 2px;
     width: fit-content;
     background: #fff;
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
-    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
   }
+
   .designer-pop-container .designer-pop-header {
     height: 50px;
   }
+
   .designer-pop-container .designer-pop-body {
     padding: 25px 25px 30px;
   }
+
   .designer-pop-container .designer-canvas-container {
     padding: 0 20px 30px;
     -webkit-user-select: none;
@@ -115,11 +124,13 @@
     -ms-user-select: none;
     user-select: none;
   }
+
   .designer-pop-container .designer-canvas-area {
     position: relative;
     border: 1px solid gray;
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC");
   }
+
   .designer-pop-container .designer-canvas-area .designer-background-container {
     display: inline-flex;
     display: -webkit-inline-flex;
@@ -137,6 +148,7 @@
     max-width: 100%;
     max-height: 100%;
   }
+
   .designer-pop-container .designer-canvas-shadow {
     position: absolute;
     left: 0;
@@ -147,6 +159,7 @@
     opacity: .5;
     cursor: move;
   }
+
   .designer-pop-container .designer-view-container {
     position: absolute;
     left: 0;
@@ -157,28 +170,32 @@
     line-height: 0;
     cursor: move;
   }
+
   .designer-pop-container .designer-view-box {
     overflow: hidden;
     width: 100%;
     height: 100%;
     outline: 1px solid #39f;
-    outline-color: rgba(51,153,255,.75);
+    outline-color: rgba(51, 153, 255, .75);
   }
-  .designer-pop-container .designer-view-box>img{
-    max-height: none!important;
-    max-width: none!important;
-    min-height: 0!important;
-    min-width: 0!important;
+
+  .designer-pop-container .designer-view-box>img {
+    max-height: none !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
 
     width: 500px;
     height: 200px;
   }
+
   .designer-pop-container .designer-dashed {
     position: absolute;
     display: block;
     border: 0 dashed #eee;
     opacity: .5;
   }
+
   .designer-pop-container .designer-dashed.dashed-center {
     position: absolute;
     display: block;
@@ -188,6 +205,7 @@
     height: 0;
     opacity: .75;
   }
+
   .designer-pop-container .designer-dashed.dashed-center::before,
   .designer-pop-container .designer-dashed.dashed-center::after {
     position: absolute;
@@ -195,12 +213,14 @@
     background-color: #eee;
     content: " ";
   }
+
   .designer-pop-container .designer-dashed.dashed-center::before {
     left: -3px;
     top: 0;
     width: 7px;
     height: 1px;
   }
+
   .designer-pop-container .designer-dashed.dashed-center::after {
     left: 0;
     top: -3px;
@@ -216,6 +236,7 @@
     width: 100%;
     height: 33.33333%;
   }
+
   .designer-pop-container .designer-dashed.dashed-width {
     left: 33.33333%;
     top: 0;
@@ -233,30 +254,35 @@
     background-color: #39f;
     opacity: .1;
   }
+
   .designer-pop-container .designer-line.line-left {
     top: 0;
     left: -3px;
     width: 5px;
     cursor: ew-resize;
   }
+
   .designer-pop-container .designer-line.line-right {
     top: 0;
     right: -3px;
     width: 5px;
     cursor: ew-resize;
   }
+
   .designer-pop-container .designer-line.line-top {
     top: -3px;
     right: 0;
     height: 5px;
     cursor: ns-resize;
   }
+
   .designer-pop-container .designer-line.line-bottom {
     bottom: -3px;
     right: 0;
     height: 5px;
     cursor: ns-resize;
   }
+
   .designer-pop-container .designer-point {
     position: absolute;
     display: block;
@@ -265,66 +291,185 @@
     background-color: #39f;
     opacity: .75;
   }
+
   .designer-pop-container .designer-point.point-w {
     cursor: ew-resize;
     left: -3px;
     top: 50%;
     margin-top: -3px;
   }
+
   .designer-pop-container .designer-point.point-wn {
     left: -3px;
     top: -3px;
     cursor: nwse-resize;
   }
+
   .designer-pop-container .designer-point.point-n {
     left: 50%;
     top: -3px;
     margin-left: -3px;
     cursor: ns-resize;
   }
+
   .designer-pop-container .designer-point.point-ne {
     right: -3px;
     top: -3px;
     cursor: nesw-resize;
   }
+
   .designer-pop-container .designer-point.point-e {
     right: -3px;
     top: 50%;
     margin-top: -3px;
     cursor: ew-resize;
   }
+
   .designer-pop-container .designer-point.point-es {
     right: -3px;
     bottom: -3px;
     cursor: nwse-resize;
   }
+
   .designer-pop-container .designer-point.point-s {
     left: 50%;
     margin-left: -3px;
     bottom: -3px;
     cursor: ns-resize;
   }
+
   .designer-pop-container .designer-point.point-sw {
     left: -3px;
     bottom: -3px;
     cursor: nesw-resize;
   }
+
   .designer-f24 {
     font-size: 24px;
   }
+
+  .designer-f30 {
+    font-size: 30px;
+  }
+
+  .designer-f38 {
+    font-size: 38px;
+  }
+
+  .designer-tc {
+    text-align: center;
+  }
+
   .designer-pointer {
     cursor: pointer;
   }
+
   .designer-pointer:hover {
     opacity: .8;
   }
+
   .designer-pop-container .designer-pop-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
   }
+
+  .designer-pop-container .designer-tool-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 20px;
+    color: #606266;
+  }
+
+  .designer-pop-container .designer-pop-prompt {
+    margin: 10px 0;
+    color: #606266;
+  }
+
+  .designer-pop-container .designer-progress-container {
+    margin: 10px 0 15px;
+    position: relative;
+  }
+  .designer-pop-container .designer-progress-bar {
+    vertical-align: middle;
+  }
+  .designer-pop-container .designer-progress-bar-outer {
+    position: relative;
+    overflow: hidden;
+    border-radius: 100px;
+    height: 18px;
+    background-color: #ebeef5;
+    vertical-align: middle;
+  }
+  .designer-pop-container .designer-progress-bar-inner {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: #409eff;
+    text-align: right;
+    border-radius: 100px;
+    line-height: 1;
+    white-space: nowrap;
+    -webkit-transition: width .6s ease;
+    transition: width .6s ease;
+  }
+  .designer-pop-container .designer-progress-bar-text {
+    display: inline-block;
+    vertical-align: middle;
+    color: #fff;
+    font-size: 12px;
+    margin: 0 5px;
+  }
+  .designer-pop-container .designer-progress-bar-text::after {
+    display: inline-block;
+    content: "";
+    height: 100%;
+    vertical-align: middle;
+  }
+  .designer-pop-container .designer-pop-btn {
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    color: #606266;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  .designer-pop-container .designer-pop-btn.designer-cancel-btn:hover {
+    border-color: #c6e2ff;
+    color: #409eff;
+    background-color: #ecf5ff;
+  }
+  .designer-pop-container .designer-pop-btn.designer-confirm-btn {
+    margin-left: 10px;
+    border-color: #58bbf3;
+    color: #fff;
+    background-color: #58bbf3;
+  }
+  .designer-pop-container .designer-pop-btn.designer-confirm-btn:hover {
+    border-color: #409eff;
+    background-color: #409eff;
+  }
+
 </style>
+
 <body>
   <div class="designer-interface-container">
     <div><span class="designer-interface-text">{Upload Your Photo}</span></div>
@@ -335,7 +480,7 @@
       <input type="file" name="file">
     </div>
     <!-- 弹出层 -->
-    <div class="designer-pop-container" style="display: none;">
+    <div class="designer-pop-container" style="display: block;">
       <div class="designer-pop-dialog" role="dialog" aria-label="dialog" aria-modal="true">
         <div class="designer-pop-header">
           <div><span>{pop title}</span></div>
@@ -345,12 +490,16 @@
           <div class="designer-canvas-container">
             <div class="designer-canvas-area">
               <div class="designer-background-container">
-                <img class="designer-canvas-img" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589623616344&di=9d9e9264e56d488fd676c3ae4461af43&imgtype=0&src=http%3A%2F%2Fimages4.c-ctrip.com%2Ftarget%2F2A0k1b000001c4npr55A8_720_480_s.jpg" alt="">
+                <img class="designer-canvas-img"
+                  src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589623616344&di=9d9e9264e56d488fd676c3ae4461af43&imgtype=0&src=http%3A%2F%2Fimages4.c-ctrip.com%2Ftarget%2F2A0k1b000001c4npr55A8_720_480_s.jpg"
+                  alt="">
               </div>
               <div class="designer-canvas-shadow"></div>
               <div class="designer-view-container" style="transform: translate(50px, 100px);">
                 <div class="designer-view-box">
-                  <img style="transform: translate(-50px, 0px);" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589623616344&di=9d9e9264e56d488fd676c3ae4461af43&imgtype=0&src=http%3A%2F%2Fimages4.c-ctrip.com%2Ftarget%2F2A0k1b000001c4npr55A8_720_480_s.jpg" alt="">
+                  <img style="transform: translate(-50px, 0px);"
+                    src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589623616344&di=9d9e9264e56d488fd676c3ae4461af43&imgtype=0&src=http%3A%2F%2Fimages4.c-ctrip.com%2Ftarget%2F2A0k1b000001c4npr55A8_720_480_s.jpg"
+                    alt="">
                 </div>
                 <span class="designer-dashed dashed-width"></span>
                 <span class="designer-dashed dashed-height"></span>
@@ -370,7 +519,28 @@
               </div>
             </div>
           </div>
-          <div class="designer-pop-footer">交互按钮</div>
+          <div class="designer-pop-footer">
+            <div class="designer-tool-bar">
+              <div><i class="designer-f38 designer-pointer designer-icon-counterclockwise"></i></div>
+              <div><i class="designer-f30 designer-pointer designer-icon-loop"></i></div>
+              <div><i class="designer-f38 designer-pointer designer-icon-clockwise"></i></div>
+            </div>
+            <div class="designer-pop-prompt designer-tc">{设计提示}</div>
+            <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                class="designer-progress-container">
+              <div class="designer-progress-bar">
+                <div class="designer-progress-bar-outer">
+                  <div class="designer-progress-bar-inner" style="width: 25%;">
+                    <div class="designer-progress-bar-text">25%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="designer-pop-tool-bar designer-tc">
+              <a class="designer-pop-btn designer-cancel-btn">{取消}</a>
+              <a class="designer-pop-btn designer-confirm-btn">{确认}</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -389,4 +559,5 @@
     new Designer();
   </script>
 </body>
+
 </html>
