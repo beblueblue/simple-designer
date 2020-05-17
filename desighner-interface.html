@@ -8,6 +8,48 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
 <script src="./designer.js"></script>
 <style>
+  @font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?64640s');
+  src:  url('fonts/icomoon.eot?64640s#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?64640s') format('truetype'),
+    url('fonts/icomoon.woff?64640s') format('woff'),
+    url('fonts/icomoon.svg?64640s#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="designer-icon-"], [class*=" designer-icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.designer-icon-delete:before {
+  content: "\e900";
+}
+.designer-icon-counterclockwise:before {
+  content: "\e901";
+  color: #525c6a;
+}
+.designer-icon-clockwise:before {
+  content: "\e902";
+  color: #525c6a;
+}
+.designer-icon-loop:before {
+  content: "\ea2e";
+}
+
   .designer-interface-container {
     position: relative;
     display: flex;
@@ -67,7 +109,7 @@
     padding: 25px 25px 30px;
   }
   .designer-pop-container .designer-canvas-container {
-    border: 1px solid gray;
+    padding: 0 20px 30px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -75,8 +117,7 @@
   }
   .designer-pop-container .designer-canvas-area {
     position: relative;
-    width: 500px;
-    height: 400px;
+    border: 1px solid gray;
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAA3NCSVQICAjb4U/gAAAABlBMVEXMzMz////TjRV2AAAACXBIWXMAAArrAAAK6wGCiw1aAAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M26LyyjAAAABFJREFUCJlj+M/AgBVhF/0PAH6/D/HkDxOGAAAAAElFTkSuQmCC");
   }
   .designer-pop-container .designer-canvas-area .designer-background-container {
@@ -250,7 +291,7 @@
     right: -3px;
     top: 50%;
     margin-top: -3px;
-    cursor: ne-resize;
+    cursor: ew-resize;
   }
   .designer-pop-container .designer-point.point-es {
     right: -3px;
@@ -268,6 +309,21 @@
     bottom: -3px;
     cursor: nesw-resize;
   }
+  .designer-f24 {
+    font-size: 24px;
+  }
+  .designer-pointer {
+    cursor: pointer;
+  }
+  .designer-pointer:hover {
+    opacity: .8;
+  }
+  .designer-pop-container .designer-pop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
 </style>
 <body>
   <div class="designer-interface-container">
@@ -279,11 +335,11 @@
       <input type="file" name="file">
     </div>
     <!-- 弹出层 -->
-    <div class="designer-pop-container">
+    <div class="designer-pop-container" style="display: none;">
       <div class="designer-pop-dialog" role="dialog" aria-label="dialog" aria-modal="true">
         <div class="designer-pop-header">
-          <div><span></span></div>
-          <div><a></a></div>
+          <div><span>{pop title}</span></div>
+          <div><i class="designer-icon-delete designer-f24 designer-pointer"></i></div>
         </div>
         <div class="designer-pop-body">
           <div class="designer-canvas-container">
