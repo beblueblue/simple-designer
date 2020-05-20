@@ -3839,7 +3839,8 @@
       this.$pop.find('.designer-cancel-btn, .designer-icon-delete').on('click', function(e) {
         $this.$pop.hide();
         $this.$container.find('.designer-preview-sm').hide().siblings().show();
-        $this.fileInput.value('');
+        $this.$fileInput.value('');
+        $this.$container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
       });
       // this.$pop.find('.designer-icon-delete').off('click')
       // this.$pop.find('.designer-icon-delete').on('click', function(e) {
@@ -3888,14 +3889,14 @@
       timer = setInterval(function() {
         if(progressBarNum < 98) {
           progressBarNum += 1;
-          $this.container.find('.designer-progress-bar-inner').text(`${progressBarNum}%`).css('width', `${progressBarNum}%`);
+          $this.$container.find('.designer-progress-bar-inner').text(`${progressBarNum}%`).css('width', `${progressBarNum}%`);
         } else {
           clearInterval(timer)
         }
       }, 50)
 
       const formData = new FormData(); 
-      formData.append('file', $this.fileInput.files[0]);
+      formData.append('file', $this.$fileInput.get(0).files[0]);
       
       $.ajax(uploadImgUrl, {
         method: 'POST',
@@ -3919,16 +3920,16 @@
         contentType: false,
         success(data) {
           clearInterval(timer);
-          $this.fileInput.value(data.hash);
-          $this.container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
+          $this.$fileInput.value(data.hash);
+          $this.$container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
           this.$container.find('.designer-preview-img').attr('src', imgSrc);
           this.$container.find('.designer-preview-sm').show().siblings().hide();
           this.$pop.hide();
         },
         error() {
           clearInterval(timer);
-          $this.container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
-          $this.fileInput.value('')
+          $this.$container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
+          $this.$fileInput.value('')
           $this.$container.find('.designer-confirm-btn').removeClass('disabled')
         },
       });
