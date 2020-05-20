@@ -13,7 +13,12 @@
 
 <body>
   <div class="designer-interface-container">
-    <div><span class="designer-interface-text">{Upload Your Photo}</span></div>
+    <div>
+      <span class="designer-interface-text">{Upload Your Photo}</span>
+      <div class="designer-preview-sm">
+        <img class="designer-preview-img" src="" alt="">
+      </div>
+    </div>
     <div>
       <div class="designer-interface-btn">
         {Upload Your Photo}
@@ -21,6 +26,15 @@
       <input type="file" name="file">
     </div>
     <!-- 弹出层 -->
+    <div class="designer-img-pop">
+      <div class="designer-img-dialog">
+        <div class="designer-pop-header">
+          <div><span>{img title}</span></div>
+          <div><i class="designer-icon-delete designer-f24 designer-pointer"></i></div>
+        </div>
+        <div class="designer-preview-lg"><img class="designer-preview-img" src="" alt=""></div>
+      </div>
+    </div>
     <div class="designer-pop-container" style="display: none;">
       <div class="designer-pop-dialog" role="dialog" aria-label="dialog" aria-modal="true">
         <div class="designer-pop-header">

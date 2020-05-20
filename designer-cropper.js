@@ -1,14 +1,4 @@
 (function(){
-  /*!
- * Cropper.js v1.5.6
- * https://fengyuanchen.github.io/cropperjs
- *
- * Copyright 2015-present Chen Fengyuan
- * Released under the MIT license
- *
- * Date: 2019-10-04T04:33:48.372Z
- */
-
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -3621,6 +3611,7 @@
       this.configCache = this.formatConfig(config);
       this.uniqueId = Number(new Date())
       this.$container = null;
+      this.$fileInput = null;
       this.$pop = null;
       this.$backImg = null;
       this.$viewer = null;
@@ -3632,29 +3623,20 @@
 
     formatConfig(config) {
       return $.extend(true, {
+        uploadImgUrl: '',
+        orderPropertyName: 'IMG_HASH',
         width: 500, // 设计区域大小
         height: 500, // 设计区域大小
-        viewerProportion: 0.8, // 可视区域占设计区域的比例
         viewerRatio: 1.5, // 可视区域高宽比
-        productInfo: {
-          id: 0,  //产品标识
-        },
-        productData: {
-          frontImgUrl: '', // 前景图
-          backImgUrl: '', // 背景图
-        },
         // 可视文本配置
         textConfig: {
           uploadLabel: 'Upload Your Photo', // 图片上传按钮提示语
           upload: 'upload', // 图片上传按钮
           popTitle: '', // 弹窗标题
+          imgPopTitle: '', // 图片预览弹窗标题
           designerTips: '', // 设计提示
           popCancel: '取消', // 取消按钮文本
           popConfirm: '确认', // 确认按钮文本
-        },
-        // 提示文本配置
-        promptConfig: {
-      
         }
       }, config || {})
     }
@@ -3668,16 +3650,20 @@
 
     buildApp() {
       const { 
+        orderPropertyName,
         textConfig: {
           upload,
           uploadLabel,
         }
       } = this.configCache;
-      const $fileInput = $(`<input data-v-${this.uniqueId} type="file" name="file">`);
+      const $fileInput = $(`<input data-v-${this.uniqueId} type="file" name="${orderPropertyName}">`);
       const $fileBtn = $(`<div data-v-${this.uniqueId} class="designer-interface-btn">${upload}</div>`);
       const $container = $(`
         <div data-v-${this.uniqueId} class="designer-interface-container mb-20">
-          <div data-v-${this.uniqueId}><span data-v-${this.uniqueId} class="designer-interface-text">${uploadLabel}</span></div>
+          <div data-v-${this.uniqueId}>
+            <span data-v-${this.uniqueId} class="designer-interface-text">${uploadLabel}</span>
+            <div data-v-${this.uniqueId} class="designer-preview-sm"><img class="designer-preview-img"></div>
+          </div>
         </div>
       `);
       const $fileContainer = $(`<div data-v-${this.uniqueId}>`);
@@ -3700,11 +3686,14 @@
         const reader = new FileReader();
         reader.onload = (evt) => {
           $this.imgOriginData = evt.target.result;
+          $container.find('.designer-preview-sm').hide();
+          $container.find('.designer-confirm-btn').removeClass('disabled')
           $this.buildDesigner()
         }
         reader.readAsDataURL(files[0]);
       });
       this.$container = $container;
+      this.$fileInput = $fileInput;
 
       $insertionPoint.before($container);
     }
@@ -3722,13 +3711,21 @@
     }
 
     buildDesigner() {
+      const {
+        textConfig: {
+          popTitle,
+          imgPopTitle,
+        }
+      } = this.configCache;
       const initFlag = this.getPop();
       const $pop = initFlag ? this.$pop : $(`<div class="designer-pop-container" data-v-${this.uniqueId}>`);
       const $dialog = $(`<div class="designer-pop-dialog" role="dialog" aria-label="dialog" aria-modal="true" data-v-${this.uniqueId}>`);
       this.$pop = $pop;
-      const $header = this.buildDesignerHeader();
-      const $body = this.buildDesignerBody();
+      const $header = this.buildDesignerHeader(popTitle, $pop);
       const $footer = this.buildDesignerFooter();
+      const $imgPop = $(`<div class="designer-img-pop" data-v-${this.uniqueId}>`);
+      const $imgPopHeader = this.buildDesignerHeader(imgPopTitle, $imgPop);
+      const $body = this.buildDesignerBody();
 
       $pop.empty().append(
         $dialog.append(
@@ -3736,29 +3733,30 @@
           $body.append($footer)
         )
       ).show();
+      $imgPop.empty().append(
+        $(`<div class="designer-img-dialog">`).append(
+          $imgPopHeader,
+          `<div class="designer-preview-lg"><img class="designer-preview-img" src="" alt=""></div>`
+        )
+      ).hide();
       if(!initFlag) {
-        this.$container.append($pop);
+        this.$container.append($pop, $imgPop);
+        $pop.show();
       }
     }
-    buildDesignerHeader() {
-      const {
-        textConfig: {
-          popTitle,
-        }
-      } = this.configCache;
-      const $pop = this.$pop;
+    buildDesignerHeader(title, $pop) {
       const $closeBtn = $(`<i class="designer-icon-delete designer-f24 designer-pointer" data-v-${this.uniqueId}>`);
 
       $closeBtn.on('click', function(){
         $pop.hide();
       });
       return $(`<div class="designer-pop-header" data-v-${this.uniqueId}>`).append(
-        `<div data-v-${this.uniqueId}><span>${popTitle}</span></div>`,
+        `<div data-v-${this.uniqueId}><span>${title}</span></div>`,
         $('<div data-v-${this.uniqueId}>').append($closeBtn),
       );
     }
     buildDesignerBody() {
-      const {width, height} = this.configCache;
+      const {width, height, viewerRatio} = this.configCache;
       const $designerCanvasArea = $(`<div class="designer-canvas-area" data-v-${this.uniqueId} style="width: ${width}px; height: ${height}px">`);
       const $backImg = $(`<img class="designer-canvas-img" data-v-${this.uniqueId}>`);
       const $this = this;
@@ -3770,15 +3768,25 @@
 
       this.$backImg = $backImg;
       this.$viewer = $(`<div class="designer-canvas-container" data-v-${this.uniqueId}>`).append($designerCanvasArea);
-
-      $backImg.on('load', () => {
+      if($backImg.get(0).complete) {
         $this.designerCropper = new Cropper($this.$backImg.get(0), {
-          aspectRatio: 1.5,
+          aspectRatio: viewerRatio,
           dragMode: 'move',
           viewMode: 1,
         });
-        $this.registerHandle()
-      })
+        setTimeout(function() {
+          $this.registerHandle();
+        }, 10)
+      } else {
+        $backImg.on('load', () => {
+          $this.designerCropper = new Cropper($this.$backImg.get(0), {
+            aspectRatio: viewerRatio,
+            dragMode: 'move',
+            viewMode: 1,
+          });
+          $this.registerHandle()
+        })
+      }
 
       return this.$viewer;
     }
@@ -3815,37 +3823,116 @@
     }
     registerHandle() {
       const $this = this;
-      this.$pop.find('.designer-opposite-rotate-btn').off('click')
-      this.$pop.find('.designer-opposite-rotate-btn').on('click', function(e) {
-        $this.rotate(false);
+      this.$container.find('.designer-opposite-rotate-btn').off('click')
+      this.$container.find('.designer-opposite-rotate-btn').on('click', function(e) {
+        $this.designerCropper.rotate(-45);
       });
-      this.$pop.find('.designer-rotate-btn').off('click')
-      this.$pop.find('.designer-rotate-btn').on('click', function(e) {
-        $this.rotate(true);
+      this.$container.find('.designer-rotate-btn').off('click')
+      this.$container.find('.designer-rotate-btn').on('click', function(e) {
+        $this.designerCropper.rotate(45);
       });
-      this.$pop.find('.designer-reset-btn').off('click')
-      this.$pop.find('.designer-reset-btn').on('click', function(e) {
+      this.$container.find('.designer-reset-btn').off('click')
+      this.$container.find('.designer-reset-btn').on('click', function(e) {
         $this.designerCropper.reset();
       });
+      this.$pop.find('.designer-cancel-btn, .designer-icon-delete').off('click')
+      this.$pop.find('.designer-cancel-btn, .designer-icon-delete').on('click', function(e) {
+        $this.$pop.hide();
+        $this.$container.find('.designer-preview-sm').hide().siblings().show();
+        $this.fileInput.value('');
+      });
+      // this.$pop.find('.designer-icon-delete').off('click')
+      // this.$pop.find('.designer-icon-delete').on('click', function(e) {
+      //   $this.$pop.hide();
+      //   $this.$container.find('.designer-preview-sm').hide().siblings().show();
+      // });
+      this.$container.find('.designer-confirm-btn').off('click')
+      this.$container.find('.designer-confirm-btn').on('click', function(e) {
+        if($(this).is('.disabled')){
+          return false;
+        }
+        $(this).addClass('disabled')
+        $this.postParams();
+      });
+      this.$container.find('.designer-preview-sm').off('click')
+      this.$container.find('.designer-preview-sm').on('click', function(e) {
+        $this.$container.find('.designer-img-pop').show();
+      });
+      this.$container.find('.designer-img-pop').off('click')
+      this.$container.find('.designer-img-pop').on('click', function(e) {
+        $this.$container.find('.designer-img-pop').hide();
+      });
+      this.$container.find('.designer-img-dialog').off('click')
+      this.$container.find('.designer-img-dialog').on('click', function(e) {
+        if(e.stopPropagation){
+          e.stopPropagation()
+        }else {
+          e.cancelBubble=true;
+        }
+      });
     }
-    rotate(flag) {
-      const number = flag ? 1 : -1;
-      this.designerCropper.rotate(number * 45);
+    postParams(){
+      const {viewerRatio, uploadImgUrl} = this.configCache
+      const imgData = this.designerCropper.getImageData();
+      const canvasData = this.designerCropper.getCanvasData();
+      const viewerData = this.designerCropper.getCanvasData();
+      const imgSrc = this.designerCropper.getCroppedCanvas({
+        width: 450,
+        height: 450 / viewerRatio,
+        fillColor: '#fff'
+      }).toDataURL('image/jpeg');
+      const $this = this;
+      let progressBarNum = 0;
+      let timer = null;
+
+      timer = setInterval(function() {
+        if(progressBarNum < 98) {
+          progressBarNum += 1;
+          $this.container.find('.designer-progress-bar-inner').text(`${progressBarNum}%`).css('width', `${progressBarNum}%`);
+        } else {
+          clearInterval(timer)
+        }
+      }, 50)
+
+      const formData = new FormData(); 
+      formData.append('file', $this.fileInput.files[0]);
+      
+      $.ajax(uploadImgUrl, {
+        method: 'POST',
+        data: {
+          img_data:formData,
+          image: {
+            width: parseInt(imgData.width), // 图片在画布里面的宽
+            height: parseInt(imgData.height), // 图片在画布里面的高
+            top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
+            left: parseInt(canvasData.left) + parseInt(imgData.left) + parseInt(imgData.width)/2, // 图片中心距离画布左顶点
+            angle: parseInt(imgData.rotate), // 图片绕中心旋转的 角度
+          },
+          design_params:{
+            width: parseInt(viewerData.width),
+            height: parseInt(viewerData.height),
+            top: parseInt(viewerData.left),
+            left: parseInt(viewerData.top),
+          }
+        },
+        processData: false,
+        contentType: false,
+        success(data) {
+          clearInterval(timer);
+          $this.fileInput.value(data.hash);
+          $this.container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
+          this.$container.find('.designer-preview-img').attr('src', imgSrc);
+          this.$container.find('.designer-preview-sm').show().siblings().hide();
+          this.$pop.hide();
+        },
+        error() {
+          clearInterval(timer);
+          $this.container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
+          $this.fileInput.value('')
+          $this.$container.find('.designer-confirm-btn').removeClass('disabled')
+        },
+      });
     }
-    // getParams(){
-    //   return {
-    //     imgLeft: this.imgLeft,
-    //     imgTop: this.imgTop,
-    //     imgWidth: this.imgWidth,
-    //     imgHeight: this.imgHeight,
-    //     imgAngle: this.imgAngle,
-    //     viewLeft: this.viewLeft,
-    //     viewTop: this.viewTop,
-    //     viewWidth: this.viewWidth,
-    //     viewHeight: this.viewHeight,
-    //   };
-    // }
-    
   }
 
   window.Designer = Designer;

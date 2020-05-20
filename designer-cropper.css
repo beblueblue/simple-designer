@@ -378,7 +378,9 @@
   display: none;
 }
 
-.designer-interface-container .designer-pop-container {
+.designer-interface-container .designer-pop-container,
+.designer-interface-container .designer-img-pop {
+  display: none;
   position: fixed;
   left: 0;
   top: 0;
@@ -391,7 +393,8 @@
 }
 
 
-.designer-pop-container .designer-pop-dialog {
+.designer-pop-container .designer-pop-dialog,
+.designer-interface-container .designer-img-dialog {
   position: relative;
   margin: 5vh auto 0;
   border-radius: 2px;
@@ -402,10 +405,10 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-
-.designer-pop-container .designer-pop-header {
-  height: 50px;
+.designer-interface-container .designer-img-dialog {
+  margin: 10vh auto 0;
 }
+
 
 .designer-pop-container .designer-pop-body {
   padding: 25px 25px 30px;
@@ -657,10 +660,11 @@
   opacity: .8;
 }
 
-.designer-pop-container .designer-pop-header {
+.designer-interface-container .designer-pop-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 50px;
   padding: 0 20px;
 }
 
@@ -705,6 +709,7 @@
   white-space: nowrap;
   -webkit-transition: width .6s ease;
   transition: width .6s ease;
+  color: #fff;
 }
 .designer-pop-container .designer-progress-bar-text {
   display: inline-block;
@@ -753,6 +758,10 @@
   color: #fff;
   background-color: #58bbf3;
 }
+.designer-pop-container .designer-pop-btn.designer-confirm-btn.disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
 .designer-pop-container .designer-pop-btn.designer-confirm-btn:hover {
   border-color: #409eff;
   background-color: #409eff;
@@ -761,4 +770,18 @@
 .designer-pop-container .cropper-point.point-se {
   width: 5px;
   height: 5px;
+}
+.designer-interface-container .designer-preview-sm {
+  overflow: hidden;
+  display: inline-block;
+  height: 48px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.designer-interface-container .designer-preview-img {
+  max-height: 100%;
+  /* border: 1px solid#e8e8e8; */
+}
+.designer-interface-container .designer-preview-lg {
+  padding: 0 20px 20px;
 }
