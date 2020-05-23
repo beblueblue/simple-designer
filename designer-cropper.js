@@ -3612,6 +3612,7 @@
       this.uniqueId = Number(new Date())
       this.$container = null;
       this.$fileInput = null;
+      this.$fileInputCart = null;
       this.$pop = null;
       this.$backImg = null;
       this.$viewer = null;
@@ -3623,7 +3624,8 @@
 
     formatConfig(config) {
       return $.extend(true, {
-        uploadImgUrl: '',
+        uploadImgUrl: 'http://snb.lichengxx.cn/design',
+        third_product_id: 0,
         orderPropertyName: 'IMG_HASH',
         width: 500, // 设计区域大小
         height: 500, // 设计区域大小
@@ -3656,7 +3658,8 @@
           uploadLabel,
         }
       } = this.configCache;
-      const $fileInput = $(`<input data-v-${this.uniqueId} type="file" name="${orderPropertyName}">`);
+      const $fileInput = $(`<input data-v-${this.uniqueId} type="file">`);
+      const $fileInputCart = $(`<input data-v-${this.uniqueId} type="text" name="${orderPropertyName}">`);
       const $fileBtn = $(`<div data-v-${this.uniqueId} class="designer-interface-btn">${upload}</div>`);
       const $container = $(`
         <div data-v-${this.uniqueId} class="designer-interface-container mb-20">
@@ -3672,7 +3675,9 @@
 
       $container.append(
         $fileContainer.append(
-          $fileBtn,$fileInput
+          $fileBtn,
+          $fileInput,
+          $fileInputCart
         )
       );
       $fileBtn.on('click', function(){
@@ -3694,6 +3699,7 @@
       });
       this.$container = $container;
       this.$fileInput = $fileInput;
+      this.$fileInputCart = $fileInputCart;
 
       $insertionPoint.before($container);
     }
@@ -3839,7 +3845,7 @@
       this.$pop.find('.designer-cancel-btn, .designer-icon-delete').on('click', function(e) {
         $this.$pop.hide();
         $this.$container.find('.designer-preview-sm').hide().siblings().show();
-        $this.$fileInput.value('');
+        $this.$fileInputCart.val('');
         $this.$container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
       });
       // this.$pop.find('.designer-icon-delete').off('click')
@@ -3853,7 +3859,7 @@
           return false;
         }
         $(this).addClass('disabled')
-        $this.postParams();
+        $this.postParams($this);
       });
       this.$container.find('.designer-preview-sm').off('click')
       this.$container.find('.designer-preview-sm').on('click', function(e) {
@@ -3872,19 +3878,19 @@
         }
       });
     }
-    postParams(){
-      const {viewerRatio, uploadImgUrl} = this.configCache
-      const imgData = this.designerCropper.getImageData();
-      const canvasData = this.designerCropper.getCanvasData();
-      const viewerData = this.designerCropper.getCanvasData();
-      const imgSrc = this.designerCropper.getCroppedCanvas({
+    postParams($this){
+      const {viewerRatio, uploadImgUrl, third_product_id} = $this.configCache
+      const imgData = $this.designerCropper.getImageData();
+      const canvasData = $this.designerCropper.getCanvasData();
+      const viewerData = $this.designerCropper.getCropBoxData();
+      const imgSrc = $this.designerCropper.getCroppedCanvas({
         width: 450,
         height: 450 / viewerRatio,
         fillColor: '#fff'
       }).toDataURL('image/jpeg');
-      const $this = this;
       let progressBarNum = 0;
       let timer = null;
+      let formData = new FormData(); 
 
       timer = setInterval(function() {
         if(progressBarNum < 98) {
@@ -3895,41 +3901,55 @@
         }
       }, 50)
 
-      const formData = new FormData(); 
-      formData.append('file', $this.$fileInput.get(0).files[0]);
-      
-      $.ajax(uploadImgUrl, {
-        method: 'POST',
-        data: {
-          img_data:formData,
-          image: {
-            width: parseInt(imgData.width), // 图片在画布里面的宽
-            height: parseInt(imgData.height), // 图片在画布里面的高
-            top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
-            left: parseInt(canvasData.left) + parseInt(imgData.left) + parseInt(imgData.width)/2, // 图片中心距离画布左顶点
-            angle: parseInt(imgData.rotate), // 图片绕中心旋转的 角度
-          },
-          design_params:{
-            width: parseInt(viewerData.width),
-            height: parseInt(viewerData.height),
-            top: parseInt(viewerData.left),
-            left: parseInt(viewerData.top),
-          }
+      formData.append('img_data', $this.$fileInput.get(0).files[0]);
+      formData.append('third_product_id', third_product_id);
+
+      const dataItem = {
+        img_data: formData,
+        image: {
+          image_width: parseInt(imgData.width), // 图片在画布里面的宽
+          image_height: parseInt(imgData.height), // 图片在画布里面的高
+          image_top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
+          image_left: parseInt(canvasData.left) + parseInt(imgData.left) + parseInt(imgData.width)/2, // 图片中心距离画布左顶点
+          image_angle: parseInt(imgData.rotate), // 图片绕中心旋转的 角度
         },
-        processData: false,
-        contentType: false,
+        design_params:{
+          design_params_width: parseInt(viewerData.width),
+          design_params_height: parseInt(viewerData.height),
+          design_params_top: parseInt(viewerData.left),
+          design_params_left: parseInt(viewerData.top),
+        }
+      }
+      for(let key in dataItem.image) {
+        formData.append(key, dataItem.image[key]);
+      }
+      for(let key in dataItem.design_params) {
+        formData.append(key, dataItem.design_params[key]);
+      }
+      
+      
+      $.ajax({
+        url: uploadImgUrl,
+        method: 'POST',
+        async: true,  
+        cache: false,  
+        contentType: false, 
+        processData: false, 
+        // traditional:true,
+        dataType:'json',
+        data: formData,
         success(data) {
           clearInterval(timer);
-          $this.$fileInput.value(data.hash);
+          $this.$fileInputCart.val(data.hash);
           $this.$container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
-          this.$container.find('.designer-preview-img').attr('src', imgSrc);
-          this.$container.find('.designer-preview-sm').show().siblings().hide();
-          this.$pop.hide();
+          $this.$container.find('.designer-preview-img').attr('src', imgSrc);
+          $this.$container.find('.designer-preview-sm').show().siblings().hide();
+          $this.$pop.hide();
         },
         error() {
           clearInterval(timer);
           $this.$container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
-          $this.$fileInput.value('')
+          $this.$fileInputCart.val('')
           $this.$container.find('.designer-confirm-btn').removeClass('disabled')
         },
       });

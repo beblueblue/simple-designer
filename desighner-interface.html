@@ -111,8 +111,16 @@
     </form>
   </div>
   <script>
-    new Designer();
-  </script>
+  const timmer = setInterval(function() {
+      if(window.$ && $('.product-page-main form[action="/cart/add"]').length > 0) {
+        $.support.cors = true;
+        new Designer({
+          third_product_id: '{{product.id}}', // 图片交互接口地址
+        })
+        clearInterval(timmer);
+    }
+  },200)
+</script>
 </body>
 
 </html>

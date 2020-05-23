@@ -35,19 +35,16 @@ shopify设计器第一版
 - 接口参数： 
 ```javascript
 img_data, // 图片源数据
-image: {
-  width, // 图片在画布里面的宽
-  height, // 图片在画布里面的高
-  top, // 图片中心距离画布左顶点
-  left, // 图片中心距离画布左顶点
-  angle, // 图片绕中心旋转的角度（顺时针角度）
-},
-design_params:{
-  width, // 裁剪窗宽度
-  height, // 裁剪窗高度
-  top, // 裁剪窗左顶点距离画布左顶点高
-  left, // 裁剪窗左顶点距离画布左顶点宽
-}
+image_width, // 图片在画布里面的宽
+image_height, // 图片在画布里面的高
+image_top, // 图片中心距离画布左顶点
+image_left, // 图片中心距离画布左顶点
+image_angle, // 图片绕中心旋转的角度（顺时针角度）
+design_params_width, // 裁剪窗宽度
+design_params_height, // 裁剪窗高度
+design_params_top, // 裁剪窗左顶点距离画布左顶点高
+design_params_left, // 裁剪窗左顶点距离画布左顶点宽
+third_product_id, // shopify 产品id
 
 // 返回值
 data: {
