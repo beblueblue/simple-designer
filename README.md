@@ -7,7 +7,7 @@ shopify设计器第一版
   ![enter-code-editor.jpg](./img/enter-code-editor.jpg)
   1.2 将本项目 `./fonts` 中文件全部加到 `asset` 中
   ![add-fonts.jpg](./img/add-fonts.jpg)
-  1.3 新建模板文件 `product.designer.liquid`，将本项目 `product-designer.js` 文件代码复制到里面。  
+  1.3 新建模板文件 `product.designer.liquid`，将本项目 `designer.v1.liquid` 文件代码复制到里面。  
   ![add-template.jpg](./img/add-template.jpg)
   1.4 编辑产品，定制产品模板文件切换为 `product.designer.liquid`  
   ![add-product-1.jpg](./img/add-product-1.jpg)

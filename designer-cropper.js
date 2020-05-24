@@ -3630,6 +3630,7 @@
         width: 500, // 设计区域大小
         height: 500, // 设计区域大小
         viewerRatio: 1.5, // 可视区域高宽比
+        angleStep: 15, // 单次旋转角度
         // 可视文本配置
         textConfig: {
           uploadLabel: 'Upload Your Photo', // 图片上传按钮提示语
@@ -3829,13 +3830,14 @@
     }
     registerHandle() {
       const $this = this;
+      const {angleStep} = this.configCache;
       this.$container.find('.designer-opposite-rotate-btn').off('click')
       this.$container.find('.designer-opposite-rotate-btn').on('click', function(e) {
-        $this.designerCropper.rotate(-45);
+        $this.designerCropper.rotate(-1 * angleStep);
       });
       this.$container.find('.designer-rotate-btn').off('click')
       this.$container.find('.designer-rotate-btn').on('click', function(e) {
-        $this.designerCropper.rotate(45);
+        $this.designerCropper.rotate(angleStep);
       });
       this.$container.find('.designer-reset-btn').off('click')
       this.$container.find('.designer-reset-btn').on('click', function(e) {
