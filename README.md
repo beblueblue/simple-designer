@@ -1,21 +1,28 @@
 # simple-designer
 shopify设计器第一版
 
-# 设计思路
-- 产品页面： product.liquid
-
 # 使用指南
-1. 添加配置
-2. 初始化设计器
+1. 准备模板模板文件  
+  1.1 进入 shopify 后台代码编辑
+  ![enter-code-editor.jpg](./img/enter-code-editor.jpg)
+  1.2 将本项目 `./fonts` 中文件全部加到 `asset` 中
+  ![add-fonts.jpg](./img/add-fonts.jpg)
+  1.3 新建模板文件 `product.designer.liquid`，将本项目 `product-designer.js` 文件代码复制到里面。  
+  ![add-template.jpg](./img/add-template.jpg)
+  1.4 编辑产品，定制产品模板文件切换为 `product.designer.liquid`  
+  ![add-product-1.jpg](./img/add-product-1.jpg)
+  ![add-product-2.jpg](./img/add-product-2.jpg)
+
 
 # 配置参数说明
 ```javascript
 {
-  uploadImgUrl: '', // 图片参数交互地址
-  orderPropertyName: 'IMG_HASH', // 向 shopify 订单增加的属性名。
+  uploadImgUrl: 'http://snb.lichengxx.cn/api/product', // 图片参数交互地址
+  orderPropertyName: "properties[customisationId]", // 向 shopify 订单增加的属性名。
   width: 500, // 设计区域大小
   height: 500, // 设计区域大小
   viewerRatio: 1.5, // 可视区域高宽比
+  angleStep: 15, // 单次旋转角度
   // 可视文本配置
   textConfig: {
     uploadLabel: 'Upload Your Photo', // 图片上传按钮提示语

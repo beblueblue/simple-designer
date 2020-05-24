@@ -116,6 +116,7 @@
         $.support.cors = true;
         new Designer({
           third_product_id: '{{product.id}}', // 图片交互接口地址
+          orderPropertyName: "properties[customisationId]",
         })
         clearInterval(timmer);
     }
