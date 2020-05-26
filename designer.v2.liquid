@@ -1,0 +1,22 @@
+{% include 'breadcrumbs' %}
+{% section 'product' %}
+{% section 'carousel-related-products' %}
+<link rel="stylesheet" href="{{'designer.common.css' | asset_url}}">
+<script src="{{'designer.cropper.js' | asset_url}}" type="text/javascript"></script>
+
+
+<script>
+const timmer = setInterval(function() {
+  	if(window.$ && $('.product-page-main form[action="/cart/add"]').length > 0) {
+      $.support.cors = true;
+      new Designer({
+        third_product_id: "{{product.id}}", // 图片交互接口地址
+        product_price: "{{product.price_min}}", // 产品价格
+        product_title: "{{product.title}}", // 产品价格
+        assetUrl: "{{'/' | asset_url}}", // 资源地址
+        orderPropertyName: "properties[customisationId]", //定制产品hash字段
+      });
+      clearInterval(timmer);
+	}
+},200);
+</script>

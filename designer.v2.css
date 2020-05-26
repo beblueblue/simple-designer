@@ -807,10 +807,264 @@ form[action="/cart/add"] .designer-interface-container-v2~div button {
   background-color: #fff;
   display: none;
 }
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 1024px) {
   .designer-dialog-container-v2 {
     position: absolute;
     box-shadow: -2px 0 6px rgba(0,0,0,0.1);
     z-index: 1;
   }
+  .designer-dialog-container-v2 .designer-v2-area-header{
+    box-shadow: 0 1px 0 rgba(0,0,0,0.15);
+  }
+}
+@media only screen and (max-width: 1024px) {
+  #MainContent {
+    z-index: 10;
+  }
+
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+.designer-dialog-container-v2 .designer-v2-area-header {
+  width: 100%;
+  height: 62px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.designer-dialog-container-v2 .designer-v2-event-close {
+  width: 50px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.designer-dialog-container-v2 .designer-v2-icon {
+  width: 30px;
+    height: 30px;
+    fill: #ff0136;
+}
+
+.designer-dialog-container-v2 .designer-v2-price-sale {
+  width: auto;
+  flex: 1;
+  overflow: hidden;
+}
+
+.designer-dialog-container-v2 .designer-v2-price-sale>h2 {
+  width: 100%;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #131313;
+  letter-spacing: 0;
+}
+.designer-dialog-container-v2 .designer-v2-price-sale>p {
+  width: 100%;
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #a1a1a1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes designer-v2-loading {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+.designer-dialog-container-v2 .designer-v2-add-cart-cart {
+  width: auto;
+  background-color: #ff0136;
+  height: 42px;
+  padding: 0 15px;
+  border-radius: 4px;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  margin: 0 10px;
+}
+.designer-dialog-container-v2 .designer-v2-buy-it-now {
+  width: auto;
+  background-color: #FFE94E;
+  height: 42px;
+  padding: 0 15px;
+  border-radius: 4px;
+  color: #131313;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  margin: 0 10px;
+}
+.designer-dialog-container-v2 .designer-v2-add-cart-cart span,
+.designer-dialog-container-v2 .designer-v2-buy-it-now span {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  display: none;
+}
+.designer-dialog-container-v2 .designer-v2-add-cart-cart span img,
+.designer-dialog-container-v2 .designer-v2-buy-it-now span img {
+  width: 20px;
+  height: 20px;
+  animation: designer-v2-loading 1s linear infinite;
+}
+.designer-dialog-container-v2 a {
+  text-decoration: none;
+}
+.designer-dialog-container-v2 .designer-v2-area-body {
+  width: 100%;
+  height: calc(100% - 62px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 15px 10px;
+  position: relative;
+  z-index: 0;
+}
+
+.designer-dialog-container-v2 .designer-v2-preview-image {
+  display: none;
+  margin: 5px 5px 15px;
+  padding: 15px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+}
+.designer-dialog-container-v2 .designer-v2-preview-image h3 {
+  margin: 0 0 15px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #131313;
+  display: block;
+}
+.designer-dialog-container-v2 .designer-v2-preview-image img {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+.designer-dialog-container-v2 .designer-v2-preview-image img {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+
+.designer-dialog-container-v2 .designer-v2-photo-upload {
+  background-color: #F7F7F7;
+  display: flex;
+  height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+.designer-dialog-container-v2 .designer-v2-photo-upload .designer-v2-photo-unfold {
+  font-size: 26px;
+  transform: rotate(90deg);
+  transition: all .3s ease 0s;
+}
+
+.designer-dialog-container-v2 .designer-v2-photo-upload.close .designer-v2-photo-unfold {
+  transform: rotate(180deg);
+}
+.designer-dialog-container-v2 .designer-v2-upload-container {
+  padding: 0 5px;
+  margin-top: 20px;
+  margin-left: 0;
+}
+.designer-dialog-container-v2 .designer-v2-input-field-title {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 10px;
+  display: block;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item {
+  border: 1px solid #d0d0d0;;
+  border-radius: 4px;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+  margin-bottom: 15px;
+  margin-top: 0;
+  height: auto;
+  display: flex;
+  align-items: flex-end;
+  margin: 10px 0;
+  min-height: 52px;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-img {
+  height: 100%;
+  position: absolute;
+  left: 15px;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-items: center;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-img img {
+  width: auto;
+  margin: 2px;
+  height: 44px;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-img span {
+  font-size: 16px;
+  color: #131313;
+  display: flex;
+  align-items: center;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-btn {
+  width: 100%;
+  z-index: 1;
+  border: none;
+  position: relative;
+  cursor: pointer;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-btn>div {
+  height: 30px;
+    position: absolute;
+    right: 10px;
+    top: -39px;
+    z-index: 1;
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #424242;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 20px;
+    cursor: pointer;
+    background: #000;
+    width: 100px;
+    text-align: center;
+    text-transform: capitalize;
 }

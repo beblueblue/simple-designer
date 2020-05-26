@@ -5,6 +5,7 @@
         this.uniqueId = Number(new Date())
         this.$container = null;
         this.$form = null;
+        this.$designerArea = null;
 
         this.$fileInput = null;
         this.$fileInputCart = null;
@@ -18,9 +19,14 @@
   
       formatConfig(config) {
         return $.extend(true, {
-          uploadImgUrl: 'http://snb.lichengxx.cn/api/product',
-          third_product_id: 0,
-          orderPropertyName: "properties[customisationId]",
+          uploadImgUrl: 'http://snb.lichengxx.cn/api/product', // 定制图片交互地址
+          uploadImgAliUrl: 'https://snb.lichengxx.cn/api/ossUpload', // 阿里云地址
+          imgCount: 2, // 用户需要上传的图片数量
+          third_product_id: 0, // 第三方产品ID
+          product_price: 1000, // 第三方产品价格
+          product_title: '', // 第三方产品标题
+          assetUrl: '/', // 静态资源地址
+          orderPropertyName: "properties[customisationId]", // 定制产品hash字段
           width: 500, // 设计区域大小
           height: 500, // 设计区域大小
           viewerRatio: 1.5, // 可视区域高宽比
@@ -35,6 +41,8 @@
             designerTips: '', // 设计提示
             popCancel: '取消', // 取消按钮文本
             popConfirm: '确认', // 确认按钮文本
+            addToCart: "Add to cart", //加入购物车文本
+            buyItNow: "Buy it now", //加入购物车文本
           }
         }, config || {})
       }
@@ -73,13 +81,17 @@
         this.$designerArea = $designerArea;
 
         $insertionPoint.before(
-          $container.append(`
+          $container.append(
             $designerArea
-          `)
+          )
         );
+        this.buildDialogHeader();
+        this.buildDialogBody();
 
         $container.find('.to-designer-container>a').on('click',function() {
+          const body = $("html, body");
           $designerArea.show();
+          body.stop().animate({scrollTop:0}, 500, 'swing');
         })
       }
   
@@ -100,6 +112,111 @@
 
       getDialogInsertionPoint() {
         return this.$form.closest('#shopify-section-product .product-page__main .product-page-info');
+      }
+
+      buildDialogHeader() {
+        const {
+          $designerArea,
+          configCache: {
+            assetUrl,
+            product_price,
+            product_title,
+            textConfig: {
+              addToCart,
+              buyItNow,
+            },
+          },
+        } = this;
+        const $this = this;
+        const $dialogHeader = $(`
+          <div class="designer-v2-area-header">
+            <a href="javascript:void(0);" class="designer-v2-event-close">
+              <svg aria-hidden="true" focusable="false" role="presentation" class="designer-v2-icon" viewBox="0 0 30 30">
+                <path
+                  d="M15,12.8786797 L21.9393398,5.93933983 C22.5251263,5.35355339 23.4748737,5.35355339 24.0606602,5.93933983 C24.6464466,6.52512627 24.6464466,7.47487373 24.0606602,8.06066017 L17.1213203,15 L24.0606602,21.9393398 C24.6464466,22.5251263 24.6464466,23.4748737 24.0606602,24.0606602 C23.4748737,24.6464466 22.5251263,24.6464466 21.9393398,24.0606602 L15,17.1213203 L8.06066017,24.0606602 C7.47487373,24.6464466 6.52512627,24.6464466 5.93933983,24.0606602 C5.35355339,23.4748737 5.35355339,22.5251263 5.93933983,21.9393398 L12.8786797,15 L5.93933983,8.06066017 C5.35355339,7.47487373 5.35355339,6.52512627 5.93933983,5.93933983 C6.52512627,5.35355339 7.47487373,5.35355339 8.06066017,5.93933983 L15,12.8786797 Z"
+                  id="path-1"></path>
+              </svg>
+            </a>
+            <div class="designer-v2-price-sale">
+              <h2><span class="designer-v2-money">$${(product_price/100).toFixed(2)}</span></h2>
+              <p class="designer-v2-text-ellipsis">${product_title}</p>
+            </div>
+            <a href="javascript:void(0)" class="designer-v2-add-cart-cart">
+              <span class="designer-v2-load"><img class="designer-v2-loading"
+                  src="${assetUrl}icon-loading_40x.png"></span>${addToCart}</a>
+            <a href="javascript:void(0)" class="designer-v2-buy-it-now">
+              <span class="designer-v2-load"><img class="designer-v2-loading"
+                  src="${assetUrl}icon-loading_40x.png"></span>${buyItNow}</a>
+          </div>
+        `);
+
+        $designerArea.append($dialogHeader);
+        $designerArea.find('.designer-v2-event-close').on('click',function() {
+          $designerArea.fadeOut();
+        });
+        $designerArea.find('.designer-v2-add-cart-cart').on('click',function() {
+          $this.addToCart();
+        });
+        $designerArea.find('.designer-v2-buy-it-now').on('click',function() {
+          $this.buyItNow();
+        });
+      }
+      buildDialogBody() {
+        const {
+          $designerArea,
+          configCache: {
+            imgCount,
+          },
+        } = this;
+        const imgArr = [];
+        for(let i = 0; i < imgCount; i++){
+          imgArr.push(i);
+        }
+        const $this = this;
+        const reducer = (accumulator, currentValue, i) => {
+          return accumulator + `
+            <div class="designer-v2-upload-item"> 
+              <div class="designer-v2-upload-item-img">
+                <img id="designer-v2-img-0" width="200" src="./img/add-fonts.jpg" style="display:none;">
+                <span>Photo 1</span>
+              </div>
+              <div class="designer-v2-upload-item-btn">
+                <div>Add </div>
+                <input type="file" id="designer-v2-add-img-0" accept="*" style="display: none;">
+              </div>
+              <input type="text" id="designer-v2-upload-crop-picture-0" value="" style="display:none">
+            </div>
+          `;
+        }
+        const $dialogBody = $(`
+          <div class="designer-v2-area-body">
+            <div class="designer-v2-preview-image">
+              <h3>Preview:</h3>
+              <img id="designer-v2-merge-preview" src="">
+              <p>P.S. This is for online preview only, our designers will adjust the details for best performance.</p>
+            </div>
+            <div class="designer-v2-photo-upload">
+              <span>Upload Your Photo</span>
+              <i class="designer-v2-photo-unfold designer-icon-photo-unfold"></i>
+            </div>
+            <div class="designer-v2-upload-container">  
+              <span class="designer-v2-input-field-title">Photos</span>
+              ${imgArr.reduce(reducer, '')}
+            </div>
+          </div>
+        `);
+
+        $designerArea.append($dialogBody);
+        $designerArea.find('.designer-v2-photo-upload').on('click',function() {
+          $(this).toggleClass('close')
+          $designerArea.find('.designer-v2-upload-container').slideToggle();
+        });
+      }
+      addToCart() {
+
+      }
+      buyItNow() {
+
       }
   
       buildDesigner() {
