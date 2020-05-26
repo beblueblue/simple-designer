@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="./designer-cropper.css">
+<script src="./designer-cropper.js"></script>
+
+<style>
+svg:not(:root) {
+  overflow: hidden;
+}
+.designer-dialog-container-v2 .designer-v2-area-header {
+  width: 100%;
+  height: 62px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+@media only screen and (min-width: 768px) {
+  .designer-dialog-container-v2 .designer-v2-area-header{
+    box-shadow: 0 1px 0 rgba(0,0,0,0.15);
+  }
+}
+
+.designer-dialog-container-v2 .designer-v2-event-close {
+  width: 50px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.designer-dialog-container-v2 .designer-v2-icon {
+  width: 30px;
+    height: 30px;
+    fill: #ff0136;
+}
+
+.designer-dialog-container-v2 .designer-v2-price-sale {
+  width: auto;
+  flex: 1;
+  overflow: hidden;
+}
+
+.designer-dialog-container-v2 .designer-v2-price-sale>h2 {
+  width: 100%;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #131313;
+  letter-spacing: 0;
+}
+.designer-dialog-container-v2 .designer-v2-price-sale>p {
+  width: 100%;
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: #a1a1a1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes designer-v2-loading {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+.designer-dialog-container-v2 .designer-v2-add-cart-cart {
+  width: auto;
+  background-color: #ff0136;
+  height: 42px;
+  padding: 0 15px;
+  border-radius: 4px;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  margin: 0 10px;
+}
+.designer-dialog-container-v2 .designer-v2-buy-it-now {
+  width: auto;
+  background-color: #FFE94E;
+  height: 42px;
+  padding: 0 15px;
+  border-radius: 4px;
+  color: #131313;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  margin: 0 10px;
+}
+.designer-dialog-container-v2 .designer-v2-add-cart-cart span,
+.designer-dialog-container-v2 .designer-v2-buy-it-now span {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  display: none;
+}
+.designer-dialog-container-v2 .designer-v2-add-cart-cart span img,
+.designer-dialog-container-v2 .designer-v2-buy-it-now span img {
+  width: 20px;
+  height: 20px;
+  animation: designer-v2-loading 1s linear infinite;
+}
+.designer-dialog-container-v2 a {
+  text-decoration: none;
+}
+.designer-dialog-container-v2 .designer-v2-area-body {
+  width: 100%;
+  height: calc(100% - 62px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 15px 10px;
+  position: relative;
+  z-index: 0;
+}
+
+.designer-dialog-container-v2 .designer-v2-preview-image {
+  /* display: none; */
+  margin: 5px 5px 15px;
+  padding: 15px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+}
+.designer-dialog-container-v2 .designer-v2-preview-image h3 {
+  margin: 0 0 15px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #131313;
+  display: block;
+}
+.designer-dialog-container-v2 .designer-v2-preview-image img {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+.designer-dialog-container-v2 .designer-v2-preview-image img {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+
+.designer-dialog-container-v2 .designer-v2-photo-upload {
+  background-color: #F7F7F7;
+  display: flex;
+  height: 4rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+.designer-dialog-container-v2 .designer-v2-photo-upload .designer-v2-photo-unfold {
+  font-size: 26px;
+  transform: rotate(90deg);
+  transition: all .3s ease 0s;
+}
+.designer-dialog-container-v2 .designer-v2-photo-upload .designer-v2-photo-unfold.close {
+  transform: rotate(180deg);
+}
+.designer-dialog-container-v2 .designer-v2-upload-container {
+  padding: 0 5px;
+  margin-top: 20px;
+  margin-left: 0;
+}
+.designer-dialog-container-v2 .designer-v2-input-field-title {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 10px;
+  display: block;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item {
+  border: 1px solid rgb(240, 1, 54);
+  border-radius: 4px;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+  margin-bottom: 15px;
+  margin-top: 0;
+  height: auto;
+  display: flex;
+  align-items: flex-end;
+  margin: 5px 0;
+  min-height: 44px;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-img {
+  height: 100%;
+  position: absolute;
+  left: 15px;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-items: center;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-img img {
+  width: auto;
+  margin: 2px;
+  height: 40px;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-img span {
+  font-size: 16px;
+  color: #131313;
+  display: flex;
+  align-items: center;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-btn {
+  width: 100%;
+  z-index: 1;
+  border: none;
+  position: relative;
+  cursor: pointer;
+}
+.designer-dialog-container-v2 .designer-v2-upload-item-btn>div {
+  height: 30px;
+    position: absolute;
+    right: 10px;
+    top: -36px;
+    z-index: 1;
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #424242;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 20px;
+    cursor: pointer;
+    background: #000;
+    width: 100px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+
+
+
+
+@font-face {
+  font-family: 'icomoon';
+  src: url('./fonts/icomoon.eot?64640s');
+  src: url('./fonts/icomoon.eot?64640s#iefix') format('embedded-opentype'),
+    url('./fonts/icomoon.ttf?64640s') format('truetype'),
+    url('./fonts/icomoon.woff?64640s') format('woff'),
+    url('./fonts/icomoon.svg?64640s#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="designer-icon-"],
+[class*=" designer-icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.designer-icon-delete:before {
+  content: "\e900";
+}
+
+.designer-icon-counterclockwise:before {
+  content: "\e901";
+}
+
+.designer-icon-clockwise:before {
+  content: "\e902";
+}
+
+.designer-icon-loop:before {
+  content: "\e903";
+}
+
+.designer-icon-photo-unfold:before {
+  content: "\ea50";
+}
+</style>
+
+<body class="designer-dialog-container-v2">
+  <div class="designer-v2-area-header">
+    <a href="javascript:void(0);" class="designer-v2-event-close">
+      <svg aria-hidden="true" focusable="false" role="presentation" class="designer-v2-icon" viewBox="0 0 30 30">
+        <path
+          d="M15,12.8786797 L21.9393398,5.93933983 C22.5251263,5.35355339 23.4748737,5.35355339 24.0606602,5.93933983 C24.6464466,6.52512627 24.6464466,7.47487373 24.0606602,8.06066017 L17.1213203,15 L24.0606602,21.9393398 C24.6464466,22.5251263 24.6464466,23.4748737 24.0606602,24.0606602 C23.4748737,24.6464466 22.5251263,24.6464466 21.9393398,24.0606602 L15,17.1213203 L8.06066017,24.0606602 C7.47487373,24.6464466 6.52512627,24.6464466 5.93933983,24.0606602 C5.35355339,23.4748737 5.35355339,22.5251263 5.93933983,21.9393398 L12.8786797,15 L5.93933983,8.06066017 C5.35355339,7.47487373 5.35355339,6.52512627 5.93933983,5.93933983 C6.52512627,5.35355339 7.47487373,5.35355339 8.06066017,5.93933983 L15,12.8786797 Z"
+          id="path-1"></path>
+      </svg>
+    </a>
+    <div class="designer-v2-price-sale">
+      <h2><span class="designer-v2-money">$12.95</span></h2>
+      <p class="designer-v2-text-ellipsis">Personalized Photo Jigsaw Puzzle You Are My Love Valentine's Day Gift - 35-500 pieces
+      </p>
+    </div>
+    <a href="javascript:void(0)" class="designer-v2-add-cart-cart">
+      <span class="designer-v2-load"><img class="designer-v2-loading"
+          src="./fonts/icon-loading_40x.png"></span>Add
+      to cart</a>
+    <a href="javascript:void(0)" class="designer-v2-buy-it-now">
+      <span class="designer-v2-load"><img class="designer-v2-loading"
+          src="./fonts/icon-loading_40x.png"></span>
+      Buy It Now
+    </a>
+  </div>
+  <div class="designer-v2-area-body">
+    <div class="designer-v2-preview-image">
+      <h3>Preview:</h3>
+      <img id="designer-v2-merge-preview" src="./img/add-fonts.jpg">
+      <p>P.S. This is for online preview only, our designers will adjust the details for best performance.</p>
+    </div>
+    <div class="designer-v2-photo-upload">
+      <span>Upload Your Photo</span>
+      <i class="designer-v2-photo-unfold designer-icon-photo-unfold"></i>
+    </div>
+    <div class="designer-v2-upload-container">  
+      <span class="designer-v2-input-field-title">Photos</span>
+      <div class="designer-v2-upload-item" style="border: 1px solid rgb(240, 1, 54);"> 
+        <div class="designer-v2-upload-item-img">
+          <img id="designer-v2-img-0" width="200" src="./img/add-fonts.jpg" style="display:none;">
+          <span>Photo 1</span>
+        </div>
+        <div class="designer-v2-upload-item-btn">
+          <div>Add </div>
+          <input type="file" id="designer-v2-add-img-0" accept="*" style="display: none;">
+        </div>
+        <input type="text" id="designer-v2-upload-crop-picture-0" value="" style="display:none">
+      </div>
+    </div>
+  </div>
+  
+  <div>
+    <form action="/cart/add">
+      <div>
+        sss
+        <button type="submit"></button>
+      </div>
+    </form>
+  </div>
+  <script>
+  const timmer = setInterval(function() {
+      if(window.$ && $('.product-page-main form[action="/cart/add"]').length > 0) {
+        $.support.cors = true;
+        new Designer({
+          third_product_id: '{{product.id}}', // 图片交互接口地址
+          orderPropertyName: "properties[customisationId]",
+        })
+        clearInterval(timmer);
+    }
+  },200)
+</script>
+</body>
+
+</html>
