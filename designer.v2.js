@@ -3,6 +3,9 @@
       constructor(config) {
         this.configCache = this.formatConfig(config);
         this.uniqueId = Number(new Date())
+        this.aliData = null;
+        this.aliReturnData = null;
+        this.aliStatus = false;
         this.$container = null;
         this.$form = null;
         this.$designerArea = null;
@@ -175,17 +178,16 @@
         const $this = this;
         const reducer = (accumulator, currentValue, i) => {
           return accumulator + `
-            <div class="designer-v2-upload-item"> 
+            <div class="designer-v2-upload-item" data-id="${i}"> 
               <div class="designer-v2-upload-item-img">
-                <img id="designer-v2-img-0" width="200" src="./img/add-fonts.jpg" style="display:none;">
-                <span>Photo 1</span>
+                <img id="designer-v2-img-${i}" width="200" src="" style="display:none;">
+                <span>Photo ${i + 1}</span>
               </div>
               <div class="designer-v2-upload-item-btn">
-                <div>Add </div>
-                <input type="file" id="designer-v2-add-img-0" accept="*" style="display: none;">
+                <div>Add</div>
               </div>
-              <input type="text" id="designer-v2-upload-crop-picture-0" value="" style="display:none">
             </div>
+            <input type="file" class="designer-v2-img-input" id="designer-v2-add-img-${i}" data-id="${i}" accept="*" style="display: none;">
           `;
         }
         const $dialogBody = $(`
@@ -211,12 +213,65 @@
           $(this).toggleClass('close')
           $designerArea.find('.designer-v2-upload-container').slideToggle();
         });
+        $designerArea.find('.designer-v2-upload-item').on('click', function() {
+          const id = $(this).data('id');
+          $this.aliData = null;
+          $this.handleImgClick(id);
+          $designerArea.find(`#designer-v2-add-img-${id}`).trigger('click');
+        });
+        $designerArea.find('.designer-v2-img-input').on('change', function() {
+          $this.handleImgChange($(this).data('id'), $this)
+        });
       }
       addToCart() {
 
       }
       buyItNow() {
 
+      }
+      handleImgClick(id, callBack) {
+        const {
+          configCache: {
+            uploadImgAliUrl
+          }
+        } = this;
+        const $this = this;
+
+        $.ajax({
+          url: uploadImgAliUrl,
+          method: 'GET',
+          dataType:'json',
+          success(data) {
+            $this.aliData = data;
+            callBack && callBack(id, $this);
+          },
+          error(error) {
+            console.log('get ali failed: ', error);
+          },
+        })
+      }
+      handleImgChange(id, $this) {
+        const {
+          aliData
+        } = $this;
+        
+        if(aliData) {
+          $this.handleImgAliLoad($this)
+        } else {
+          setTimeout(() => {
+            if($this.aliData){
+              $this.handleImgAliLoad($this);
+            } else {
+              $this.handleImgClick(id, $this.handleImgChange)
+            }
+          }, 500);
+        }
+      }
+      handleImgAliLoad($this) {
+        const {
+          aliData
+        } = $this;
+        console.log('ssss', aliData)
       }
   
       buildDesigner() {
