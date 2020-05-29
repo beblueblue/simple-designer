@@ -4,11 +4,11 @@
         this.configCache = this.formatConfig(config);
         this.uniqueId = Number(new Date())
         this.aliData = null;
-        this.aliReturnData = null;
         this.aliStatus = false;
         this.$container = null;
         this.$form = null;
         this.$designerArea = null;
+        this.currentID = null;
 
         this.$fileInput = null;
         this.$fileInputCart = null;
@@ -22,8 +22,9 @@
   
       formatConfig(config) {
         return $.extend(true, {
-          uploadImgUrl: 'http://snb.lichengxx.cn/api/product', // 定制图片交互地址
-          uploadImgAliUrl: 'https://snb.lichengxx.cn/api/ossUpload', // 阿里云地址
+          uploadImgUrl: 'http://snb.lichengxx.cn/api/product/design', // 定制图片交互地址
+          getAliPramsUrl: 'https://snb.lichengxx.cn/api/ossUpload', // 获取阿里云参数地址
+          uploadAliImgUrl: 'https://snb-bucket.oss-cn-hangzhou.aliyuncs.com/', // 阿里云上传地址
           imgCount: 2, // 用户需要上传的图片数量
           third_product_id: 0, // 第三方产品ID
           product_price: 1000, // 第三方产品价格
@@ -70,7 +71,7 @@
         // 清除按钮 CSS 控制
         // 构建入口
         const $container = $(`
-          <div data-v-${this.uniqueId} class="designer-interface-container-v2 mb-20">
+          <div data-v-${this.uniqueId} class="designer-interface-container-v2 designer-interface-container mb-20">
             <div class="to-designer-container"><a>${designerBtnText}</a></div>
           </div>
         `);
@@ -216,11 +217,12 @@
         $designerArea.find('.designer-v2-upload-item').on('click', function() {
           const id = $(this).data('id');
           $this.aliData = null;
+          $this.currentID = id;
           $this.handleImgClick(id);
           $designerArea.find(`#designer-v2-add-img-${id}`).trigger('click');
         });
-        $designerArea.find('.designer-v2-img-input').on('change', function() {
-          $this.handleImgChange($(this).data('id'), $this)
+        $designerArea.find('.designer-v2-img-input').on('change', function(e) {
+          $this.handleImgChange($(this).data('id'), $this, e);
         });
       }
       addToCart() {
@@ -229,49 +231,94 @@
       buyItNow() {
 
       }
-      handleImgClick(id, callBack) {
+      handleImgClick(id, callBack, e) {
         const {
           configCache: {
-            uploadImgAliUrl
+            getAliPramsUrl
           }
         } = this;
         const $this = this;
 
         $.ajax({
-          url: uploadImgAliUrl,
+          url: getAliPramsUrl,
           method: 'GET',
           dataType:'json',
           success(data) {
             $this.aliData = data;
-            callBack && callBack(id, $this);
+            callBack && callBack(id, $this, e);
           },
           error(error) {
             console.log('get ali failed: ', error);
           },
         })
       }
-      handleImgChange(id, $this) {
+      handleImgChange(id, $this, e) {
+        let files = e.target.files;
+        if(!files || !files[0]){
+          return;
+        }
         const {
-          aliData
+          $container,
+          aliData,
         } = $this;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          $this.imgOriginData = evt.target.result;
+          $container.find('.designer-confirm-btn').removeClass('disabled')
+          $this.buildDesigner()
+        }
+        reader.readAsDataURL(files[0]);
         
         if(aliData) {
-          $this.handleImgAliLoad($this)
+          $this.handleImgAliLoad(id, $this)
         } else {
           setTimeout(() => {
             if($this.aliData){
-              $this.handleImgAliLoad($this);
+              $this.handleImgAliLoad(id, $this);
             } else {
-              $this.handleImgClick(id, $this.handleImgChange)
+              $this.handleImgClick(id, $this.handleImgChange, e)
             }
           }, 500);
         }
       }
-      handleImgAliLoad($this) {
+      handleImgAliLoad(id, $this) {
         const {
-          aliData
+          $designerArea,
+          aliData,
+          configCache: {
+            uploadAliImgUrl,
+          },
         } = $this;
-        console.log('ssss', aliData)
+        let formData = new FormData(); 
+        formData.append('name', $designerArea.find(`#designer-v2-add-img-${id}`).get(0).files[0].name);
+        formData.append('key', aliData.dir + '${filename}');
+        formData.append('policy', aliData.policy);
+        formData.append('OSSAccessKeyId', aliData.accessid);
+        formData.append('success_action_status', 200);
+        formData.append('callback', aliData.callback);
+        formData.append('signature', aliData.signature);
+        formData.append('file', $designerArea.find(`#designer-v2-add-img-${id}`).get(0).files[0]);
+        $.ajax({
+          url: aliData.host || uploadAliImgUrl,
+          method: 'POST',
+          async: true,  
+          cache: false,  
+          contentType: false, 
+          processData: false, 
+          data: formData,
+          dataType:'json',
+          success(data) {
+            if(data.status_code === 200) {
+              $designerArea.find(`#designer-v2-add-img-${id}`).data('img-id', data.data.id);
+              console.log(data);
+            } else {
+              console.log('upload ali failed: ', data);
+            }
+          },
+          error(error) {
+            console.log('upload ali failed: ', error);
+          },
+        })
       }
   
       buildDesigner() {
@@ -403,15 +450,7 @@
         this.$pop.find('.designer-cancel-btn, .designer-icon-delete').off('click')
         this.$pop.find('.designer-cancel-btn, .designer-icon-delete').on('click', function(e) {
           $this.$pop.hide();
-          $this.$container.find('.designer-preview-sm').hide().siblings().show();
-          $this.$fileInputCart.val('');
-          $this.$container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
         });
-        // this.$pop.find('.designer-icon-delete').off('click')
-        // this.$pop.find('.designer-icon-delete').on('click', function(e) {
-        //   $this.$pop.hide();
-        //   $this.$container.find('.designer-preview-sm').hide().siblings().show();
-        // });
         this.$container.find('.designer-confirm-btn').off('click')
         this.$container.find('.designer-confirm-btn').on('click', function(e) {
           if($(this).is('.disabled')){
@@ -420,10 +459,10 @@
           $(this).addClass('disabled')
           $this.postParams($this);
         });
-        this.$container.find('.designer-preview-sm').off('click')
-        this.$container.find('.designer-preview-sm').on('click', function(e) {
-          $this.$container.find('.designer-img-pop').show();
-        });
+        // this.$container.find('.designer-preview-sm').off('click')
+        // this.$container.find('.designer-preview-sm').on('click', function(e) {
+        //   $this.$container.find('.designer-img-pop').show();
+        // });
         this.$container.find('.designer-img-pop').off('click')
         this.$container.find('.designer-img-pop').on('click', function(e) {
           $this.$container.find('.designer-img-pop').hide();
@@ -438,7 +477,13 @@
         });
       }
       postParams($this){
-        const {viewerRatio, uploadImgUrl, third_product_id} = $this.configCache
+        const {
+          currentID,
+          $designerArea,
+          configCache: {
+            viewerRatio,
+          }
+        } = $this;
         const imgData = $this.designerCropper.getImageData();
         const canvasData = $this.designerCropper.getCanvasData();
         const viewerData = $this.designerCropper.getCropBoxData();
@@ -449,69 +494,84 @@
         }).toDataURL('image/jpeg');
         let progressBarNum = 0;
         let timer = null;
-        let formData = new FormData(); 
   
         timer = setInterval(function() {
           if(progressBarNum < 98) {
             progressBarNum += 1;
             $this.$container.find('.designer-progress-bar-inner').text(`${progressBarNum}%`).css('width', `${progressBarNum}%`);
           } else {
-            clearInterval(timer)
+            clearInterval(timer);
           }
         }, 50)
   
-        formData.append('img_data', $this.$fileInput.get(0).files[0]);
-        formData.append('third_product_id', third_product_id);
-  
         const dataItem = {
-          img_data: formData,
-          image: {
-            image_width: parseInt(imgData.width), // 图片在画布里面的宽
-            image_height: parseInt(imgData.height), // 图片在画布里面的高
-            image_top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
-            image_left: parseInt(canvasData.left) + parseInt(imgData.left) + parseInt(imgData.width)/2, // 图片中心距离画布左顶点
-            image_angle: parseInt(imgData.rotate), // 图片绕中心旋转的 角度
+          image_params: {
+            width: parseInt(imgData.width), // 图片在画布里面的宽
+            height: parseInt(imgData.height), // 图片在画布里面的高
+            top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
+            left: parseInt(canvasData.left) + parseInt(imgData.left) + parseInt(imgData.width)/2, // 图片中心距离画布左顶点
+            angle: parseInt(imgData.rotate), // 图片绕中心旋转的 角度
           },
           design_params:{
-            design_params_width: parseInt(viewerData.width),
-            design_params_height: parseInt(viewerData.height),
-            design_params_top: parseInt(viewerData.left),
-            design_params_left: parseInt(viewerData.top),
+            width: parseInt(viewerData.width),
+            height: parseInt(viewerData.height),
+            top: parseInt(viewerData.top),
+            left: parseInt(viewerData.left),
           }
         }
-        for(let key in dataItem.image) {
-          formData.append(key, dataItem.image[key]);
+
+        $designerArea.find(`.designer-v2-upload-item[data-id ="${currentID}"] img`).attr('src', imgSrc).show().siblings().hide();
+        $designerArea.find(`.designer-v2-upload-item[data-id ="${currentID}"] .designer-v2-upload-item-btn>div`).text('Change');
+        $designerArea.find(`#designer-v2-add-img-${currentID}`).data('item', dataItem);
+        $this.checkImgs(timer);
+      }
+      checkImgs(timer) {
+        const {
+          $container,
+          $designerArea,
+          $pop,
+          configCache:{
+            uploadImgUrl,
+            imgCount,
+          }
+        } = this;
+        const dataItem = {
+          batch_design: [],
         }
-        for(let key in dataItem.design_params) {
-          formData.append(key, dataItem.design_params[key]);
-        }
-        
-        
-        $.ajax({
-          url: uploadImgUrl,
-          method: 'POST',
-          async: true,  
-          cache: false,  
-          contentType: false, 
-          processData: false, 
-          // traditional:true,
-          dataType:'json',
-          data: formData,
-          success(data) {
-            clearInterval(timer);
-            $this.$fileInputCart.val(data.hash);
-            $this.$container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
-            $this.$container.find('.designer-preview-img').attr('src', imgSrc);
-            $this.$container.find('.designer-preview-sm').show().siblings().hide();
-            $this.$pop.hide();
-          },
-          error() {
-            clearInterval(timer);
-            $this.$container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
-            $this.$fileInputCart.val('')
-            $this.$container.find('.designer-confirm-btn').removeClass('disabled')
-          },
+
+        $designerArea.find('.designer-v2-img-input').each(function() {
+          const id = $(this).data('img-id');
+          const params = $(this).data('item');
+          if(params) {
+            params.image_params.oss_file_id = id
+            dataItem.batch_design.push(params);
+          }
         });
+        if(imgCount === dataItem.batch_design.length){
+          console.log(dataItem)
+           $.ajax({
+            url: uploadImgUrl,
+            method: 'POST',
+            dataType:'json',
+            data: dataItem,
+            success(data) {
+              clearInterval(timer);
+              $container.find('.designer-v2-add-cart-cart').data('hash', data.hash);
+              $container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
+              $pop.hide();
+            },
+            error() {
+              clearInterval(timer);
+              $container.find('.designer-v2-add-cart-cart').data('hash', null);
+              $container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
+              $container.find('.designer-confirm-btn').removeClass('disabled');
+            },
+          });
+        } else {
+          clearInterval(timer);
+          $container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
+          $pop.hide();
+        }
       }
     }
   

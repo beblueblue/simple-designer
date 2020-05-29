@@ -342,7 +342,7 @@
   content: "\ea50";
 }
 
-.designer-interface-container {
+.designer-interface-container-v1 {
   position: relative;
   display: flex;
   align-items: center;

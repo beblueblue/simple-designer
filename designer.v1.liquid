@@ -3668,7 +3668,7 @@
       const $fileInputCart = $(`<input data-v-${this.uniqueId} type="text" name="${orderPropertyName}">`);
       const $fileBtn = $(`<div data-v-${this.uniqueId} class="designer-interface-btn">${upload}</div>`);
       const $container = $(`
-        <div data-v-${this.uniqueId} class="designer-interface-container mb-20">
+        <div data-v-${this.uniqueId} class="designer-interface-container designer-interface-container-v1 mb-20">
           <div data-v-${this.uniqueId}>
             <span data-v-${this.uniqueId} class="designer-interface-text">${uploadLabel}</span>
             <div data-v-${this.uniqueId} class="designer-preview-sm"><img class="designer-preview-img"></div>
@@ -3916,15 +3916,15 @@ const {angleStep} = this.configCache;
         image: {
           image_width: parseInt(imgData.width), // 图片在画布里面的宽
           image_height: parseInt(imgData.height), // 图片在画布里面的高
-          image_top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
           image_left: parseInt(canvasData.left) + parseInt(imgData.left) + parseInt(imgData.width)/2, // 图片中心距离画布左顶点
+          image_top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
           image_angle: parseInt(imgData.rotate), // 图片绕中心旋转的 角度
         },
         design_params:{
           design_params_width: parseInt(viewerData.width),
           design_params_height: parseInt(viewerData.height),
-          design_params_top: parseInt(viewerData.left),
-          design_params_left: parseInt(viewerData.top),
+          design_params_left: parseInt(viewerData.left),
+          design_params_top: parseInt(viewerData.top),
         }
       }
       for(let key in dataItem.image) {
