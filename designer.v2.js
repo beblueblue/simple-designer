@@ -43,8 +43,8 @@
             popTitle: '', // 弹窗标题
             imgPopTitle: '', // 图片预览弹窗标题
             designerTips: '', // 设计提示
-            popCancel: '取消', // 取消按钮文本
-            popConfirm: '确认', // 确认按钮文本
+            popCancel: 'Cancel', // 取消按钮文本
+            popConfirm: 'Confirm', // 确认按钮文本
             addToCartText: "Add to cart", //加入购物车文本
             buyItNowText: "Buy it now", //加入购物车文本
           }
@@ -585,9 +585,11 @@
           configCache:{
             uploadImgUrl,
             imgCount,
+            third_product_id,
           }
         } = this;
         const dataItem = {
+          third_product_id: third_product_id,
           batch_design: [],
         }
 
@@ -600,7 +602,6 @@
           }
         });
         if(imgCount === dataItem.batch_design.length){
-          console.log(dataItem)
            $.ajax({
             url: uploadImgUrl,
             method: 'POST',

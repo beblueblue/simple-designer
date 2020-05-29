@@ -31,8 +31,8 @@
           popTitle: '', // 弹窗标题
           imgPopTitle: '', // 图片预览弹窗标题
           designerTips: '', // 设计提示
-          popCancel: '取消', // 取消按钮文本
-          popConfirm: '确认', // 确认按钮文本
+          popCancel: 'Cancel', // 取消按钮文本
+          popConfirm: 'Confirm', // 确认按钮文本
         }
       }, config || {})
     }
