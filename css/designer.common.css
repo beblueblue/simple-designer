@@ -928,6 +928,11 @@ svg:not(:root) {
   margin-right: 10px;
   display: none;
 }
+.designer-dialog-container-v2 .designer-v2-add-cart-cart.disabled span,
+.designer-dialog-container-v2 .designer-v2-buy-it-now.disabled span {
+  display: inline-block;
+}
+
 .designer-dialog-container-v2 .designer-v2-add-cart-cart span img,
 .designer-dialog-container-v2 .designer-v2-buy-it-now span img {
   width: 20px;
