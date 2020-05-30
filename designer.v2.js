@@ -60,6 +60,7 @@
         // 检测入口是否构建
         if(!this.getApp()){
           this.$form = this.getForm();
+          this.$form.prepend(`<input type="hidden" name="properties[img]" value="">`);
           this.$form.prepend(`<input type="hidden" name="${orderPropertyName}" value="">`);
           this.buildApp();
         }
@@ -241,6 +242,7 @@
         } = this;
         const $btn = $designerArea.find('.designer-v2-add-cart-cart');
         let hash = '';
+        let img = '';
 
         if($btn.is('disabled')) {
           return false;
@@ -248,6 +250,7 @@
 
         $btn.addClass('disabled');
         hash = $btn.data('hash');
+        img = $btn.data('img');
         if(!hash) {
           setTimeout(() => {
             $btn.removeClass('disabled');
@@ -255,6 +258,7 @@
           return false;
         }
         $form.find(`input[name="${orderPropertyName}"]`).val(hash);
+        $form.find(`input[name="properties[img]"]`).val(img+'?v=' + hash);
         $form.find(`button[type="submit"]`).click();
         setTimeout(() => {
           $btn.removeClass('disabled');
@@ -270,6 +274,7 @@
         } = this;
         const $btn = $designerArea.find('.designer-v2-buy-it-now');
         let hash = '';
+        let img = '';
 
         if($btn.is('disabled')) {
           return false;
@@ -277,6 +282,7 @@
 
         $btn.addClass('disabled');
         hash = $designerArea.find('.designer-v2-add-cart-cart').data('hash');
+        img = $designerArea.find('.designer-v2-add-cart-cart').data('img');
         if(!hash) {
           setTimeout(() => {
             $btn.removeClass('disabled');
@@ -284,6 +290,7 @@
           return false;
         }
         $form.find(`input[name="${orderPropertyName}"]`).val(hash);
+        $form.find(`input[name="properties[img]"]`).val(img+'?v=' + hash);
         $form.find(`[data-shopify="payment-button"] button`).eq(0).click();
       }
       handleImgClick(id, callBack, e) {
@@ -614,6 +621,7 @@
               clearInterval(timer);
               $container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
               $designerArea.find('.designer-v2-add-cart-cart').data('hash', data.hash);
+              $designerArea.find('.designer-v2-add-cart-cart').data('img', data.image_src);
               $designerArea.find('#designer-v2-merge-preview').attr('src', data.image_src);
               $designerArea.find('.designer-v2-preview-image').show();
               $pop.hide();
@@ -621,6 +629,7 @@
             error() {
               clearInterval(timer);
               $designerArea.find('.designer-v2-add-cart-cart').data('hash', null);
+              $designerArea.find('.designer-v2-add-cart-cart').data('img', null);
               $container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
               $container.find('.designer-confirm-btn').removeClass('disabled');
             },

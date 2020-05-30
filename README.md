@@ -18,8 +18,7 @@
 {
   {
     uploadImgUrl: 'http://snb.lichengxx.cn/api/product',
-    third_product_id: 0,
-    orderPropertyName: 'IMG_HASH',
+    orderPropertyName: 'properties[customisationId]',
     width: 500, // 设计区域大小
     height: 500, // 设计区域大小
     viewerRatio: 1.5, // 可视区域高宽比
@@ -114,7 +113,6 @@ data: {
 - 接口参数： 
 ```javascript
 {
-  third_product_id, // shopify 产品id
   batch_design: [
     image_params: {
       width, // 图片在画布里面的宽

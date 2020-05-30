@@ -19,7 +19,7 @@
       return $.extend(true, {
         uploadImgUrl: 'http://snb.lichengxx.cn/api/product',
         third_product_id: 0,
-        orderPropertyName: 'IMG_HASH',
+        orderPropertyName: 'properties[customisationId]',
         width: 500, // 设计区域大小
         height: 500, // 设计区域大小
         viewerRatio: 1.5, // 可视区域高宽比
