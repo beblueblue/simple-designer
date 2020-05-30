@@ -340,6 +340,7 @@ const {angleStep} = this.configCache;
         data: formData,
         success(data) {
           clearInterval(timer);
+          $this.$fileInput.val('');
           $this.$fileInputCart.val(data.hash);
           $this.$container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
           $this.$container.find('.designer-preview-img').attr('src', imgSrc);
@@ -348,6 +349,7 @@ const {angleStep} = this.configCache;
         },
         error() {
           clearInterval(timer);
+          $this.$fileInput.val('');
           $this.$container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
           $this.$fileInputCart.val('')
           $this.$container.find('.designer-confirm-btn').removeClass('disabled')

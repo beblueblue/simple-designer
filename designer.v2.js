@@ -256,6 +256,9 @@
         }
         $form.find(`input[name="${orderPropertyName}"]`).val(hash);
         $form.find(`button[type="submit"]`).click();
+        setTimeout(() => {
+          $btn.removeClass('disabled');
+        }, 1500);
       }
       buyItNow() {
         const {
@@ -361,8 +364,8 @@
           dataType:'json',
           success(data) {
             if(data.status_code === 200) {
+              $designerArea.find(`#designer-v2-add-img-${id}`).val('');
               $designerArea.find(`#designer-v2-add-img-${id}`).data('img-id', data.data.id);
-              console.log(data);
             } else {
               console.log('upload ali failed: ', data);
             }
@@ -611,7 +614,7 @@
               clearInterval(timer);
               $container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
               $designerArea.find('.designer-v2-add-cart-cart').data('hash', data.hash);
-              $designerArea.find('#designer-v2-merge-preview').attr('src', data.img_url);
+              $designerArea.find('#designer-v2-merge-preview').attr('src', data.image_src);
               $designerArea.find('.designer-v2-preview-image').show();
               $pop.hide();
             },
