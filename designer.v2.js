@@ -572,7 +572,7 @@
             height: parseInt(imgData.height), // 图片在画布里面的高
             top: parseInt(canvasData.top) + parseInt(imgData.top) + parseInt(imgData.height)/2, // 图片中心距离画布左顶点
             left: parseInt(canvasData.left) + parseInt(imgData.left) + parseInt(imgData.width)/2, // 图片中心距离画布左顶点
-            angle: parseInt(imgData.rotate), // 图片绕中心旋转的 角度
+            angle: parseInt(imgData.rotate  || 0), // 图片绕中心旋转的 角度
           },
           design_params:{
             width: parseInt(viewerData.width),
@@ -611,6 +611,7 @@
             dataItem.batch_design.push(params);
           }
         });
+        
         if(imgCount === dataItem.batch_design.length){
            $.ajax({
             url: uploadImgUrl,
