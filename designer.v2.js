@@ -236,6 +236,7 @@
         const {
           configCache: {
             orderPropertyName,
+            third_product_id,
           },
           $designerArea,
           $form,
@@ -243,6 +244,7 @@
         const $btn = $designerArea.find('.designer-v2-add-cart-cart');
         let hash = '';
         let img = '';
+        let dataItem = {};
 
         if($btn.is('disabled')) {
           return false;
@@ -258,11 +260,36 @@
           return false;
         }
         $form.find(`input[name="${orderPropertyName}"]`).val(hash);
+        // $form.find(`input[name="variant_id"]`).remove();
+        $form.find(`input[name="id"]`).val(third_product_id);
         $form.find(`input[name="properties[img]"]`).val(img+'?v=' + hash);
-        $form.find(`button[type="submit"]`).click();
-        setTimeout(() => {
-          $btn.removeClass('disabled');
-        }, 1500);
+        dataItem.properties = {
+          img: img + '?v=' + hash
+        };
+        dataItem.quantity = 1;
+        dataItem.form_type = 'product';
+        dataItem.utf8 = '✓';
+        dataItem.variant_id = $form.find(`input[name="variant_id"]`).val();
+        dataItem.id = $form.find(`input[name="variant_id"]`).val();
+
+
+        $.ajax({
+          url: '/cart/add.js',
+          method: 'POST',
+          data: dataItem,
+          dataType:'json',
+          success(data) {
+            $btn.removeClass('disabled');
+            
+          },
+          error(error) {
+            console.log('upload ali failed: ', error);
+          },
+        })
+        // $form.find(`button[type="submit"]`).click();
+        // setTimeout(() => {
+        //   $btn.removeClass('disabled');
+        // }, 1500);
       }
       buyItNow() {
         const {
