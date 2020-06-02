@@ -9,6 +9,8 @@
         this.$form = null;
         this.$designerArea = null;
         this.currentID = null;
+        this.OSSTYPE = 'OSSID';
+        this.IMGTYPE = 'IMGTYPE';
 
         this.$fileInput = null;
         this.$fileInputCart = null;
@@ -264,9 +266,7 @@
           }, 100);
           return false;
         }
-        $form.find(`input[name="${orderPropertyName}"]`).val(hash);
-        // $form.find(`input[name="variant_id"]`).remove();
-        $form.find(`input[name="id"]`).val(third_product_id);
+        // $form.find(`input[name="${orderPropertyName}"]`).val(hash);
         $form.find(`input[name="properties[img]"]`).val(img+'?v=' + hash);
         dataItem.properties = {
           img: img + '?v=' + hash
@@ -321,7 +321,7 @@
           }, 100);
           return false;
         }
-        $form.find(`input[name="${orderPropertyName}"]`).val(hash);
+        // $form.find(`input[name="${orderPropertyName}"]`).val(hash);
         $form.find(`input[name="properties[img]"]`).val(img+'?v=' + hash);
         $form.find(`[data-shopify="payment-button"] button`).eq(0).click();
       }
@@ -385,6 +385,7 @@
       }
       handleImgAliLoad(id, $this) {
         const {
+          OSSTYPE,
           $designerArea,
           aliData,
           configCache: {
@@ -413,6 +414,7 @@
             if(data.status_code === 200) {
               $designerArea.find(`#designer-v2-add-img-${id}`).val('');
               $designerArea.find(`#designer-v2-add-img-${id}`).data('img-id', data.data.id);
+              $this.checkImgs(OSSTYPE);
             } else {
               console.log('upload ali failed: ', data);
             }
@@ -580,6 +582,7 @@
       }
       postParams($this){
         const {
+          IMGTYPE,
           currentID,
           $designerArea,
           configCache: {
@@ -625,10 +628,12 @@
         $designerArea.find(`.designer-v2-upload-item[data-id ="${currentID}"] img`).attr('src', imgSrc).show().siblings().hide();
         $designerArea.find(`.designer-v2-upload-item[data-id ="${currentID}"] .designer-v2-upload-item-btn>div`).text('Change');
         $designerArea.find(`#designer-v2-add-img-${currentID}`).data('item', dataItem);
-        $this.checkImgs(timer);
+        $this.checkImgs(IMGTYPE, timer);
       }
-      checkImgs(timer) {
+      checkImgs(type, timer) {
         const {
+          OSSTYPE,
+          IMGTYPE,
           $container,
           $designerArea,
           $pop,
@@ -641,25 +646,43 @@
         const dataItem = {
           third_product_id: third_product_id,
           batch_design: [],
-        }
+        };
+        let paramsCount = 0;
+        let ossIdCount = 0; 
 
         $designerArea.find('.designer-v2-img-input').each(function() {
           const id = $(this).data('img-id');
           const params = $(this).data('item');
+          if(id) {
+            ossIdCount ++;
+          }
           if(params) {
+            paramsCount ++;
+          }
+          if(params && id) {
             params.image_params.oss_file_id = id
             dataItem.batch_design.push(params);
           }
         });
+
+        if( type === OSSTYPE && (imgCount !== ossIdCount || imgCount !== paramsCount) ) {
+          return false;
+        }
         
-        if(imgCount === dataItem.batch_design.length){
-           $.ajax({
+        if(imgCount !== paramsCount){
+          (timer !== undefined) && clearInterval(timer);
+          $container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
+          $pop.hide();
+        } else if(imgCount !== ossIdCount){
+          return false;
+        } else {
+            $.ajax({
             url: uploadImgUrl,
             method: 'POST',
             dataType:'json',
             data: dataItem,
             success(data) {
-              clearInterval(timer);
+              (timer !== undefined) && clearInterval(timer);
               $container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
               $designerArea.find('.designer-v2-add-cart-cart').data('hash', data.hash);
               $designerArea.find('.designer-v2-add-cart-cart').data('img', data.image_src);
@@ -668,17 +691,13 @@
               $pop.hide();
             },
             error() {
-              clearInterval(timer);
+              (timer !== undefined) && clearInterval(timer);
               $designerArea.find('.designer-v2-add-cart-cart').data('hash', null);
               $designerArea.find('.designer-v2-add-cart-cart').data('img', null);
               $container.find('.designer-progress-bar-inner').text(`0%`).css('width', `0%`);
               $container.find('.designer-confirm-btn').removeClass('disabled');
             },
           });
-        } else {
-          clearInterval(timer);
-          $container.find('.designer-progress-bar-inner').text(`100%`).css('width', `100%`);
-          $pop.hide();
         }
       }
     }
