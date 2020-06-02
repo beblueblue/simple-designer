@@ -1086,3 +1086,16 @@ svg:not(:root) {
     text-align: center;
     text-transform: capitalize;
 }
+#designer-toast {
+  position: fixed;
+  z-index: 11;
+  top: 50%;
+  left: 50%;
+  display: inline-block;
+  border-radius: 4px;
+  padding: 5px 10px;
+  background: black;
+  color: #fff;
+  font-size: 14px;
+  transform: translate(-50%, -50%);
+}

@@ -46,7 +46,8 @@
             popCancel: 'Cancel', // 取消按钮文本
             popConfirm: 'Confirm', // 确认按钮文本
             addToCartText: "Add to cart", //加入购物车文本
-            buyItNowText: "Buy it now", //加入购物车文本
+            buyItNowText: "Buy it now", //立即购买文本
+            addToCartToast: "WOW~ Add Successful!", //成功加入购物车文本
           }
         }, config || {})
       }
@@ -237,9 +238,13 @@
           configCache: {
             orderPropertyName,
             third_product_id,
+            textConfig: {
+              addToCartToast,
+            },
           },
           $designerArea,
           $form,
+          showToast,
         } = this;
         const $btn = $designerArea.find('.designer-v2-add-cart-cart');
         let hash = '';
@@ -280,7 +285,7 @@
           dataType:'json',
           success(data) {
             $btn.removeClass('disabled');
-            
+            showToast(addToCartToast);
           },
           error(error) {
             console.log('upload ali failed: ', error);
@@ -319,6 +324,14 @@
         $form.find(`input[name="${orderPropertyName}"]`).val(hash);
         $form.find(`input[name="properties[img]"]`).val(img+'?v=' + hash);
         $form.find(`[data-shopify="payment-button"] button`).eq(0).click();
+      }
+      showToast(text) {
+        if($('#designer-toast').length === 0) {
+          $('body').append(`<div id="designer-toast">${text}</div>`);
+        } else {
+          $('#designer-toast').text(text);
+        }
+        $('#designer-toast').show().delay(2000).fadeOut();
       }
       handleImgClick(id, callBack, e) {
         const {

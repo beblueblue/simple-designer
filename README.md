@@ -102,6 +102,7 @@ data: {
       popConfirm: 'Confirm', // 确认按钮文本
       addToCartText: "Add to cart", //加入购物车文本
       buyItNowText: "Buy it now", //加入购物车文本
+      addToCartToast: "WOW~ Add Successful!", //成功加入购物车文本
     }
   }
 }
