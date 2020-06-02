@@ -35,7 +35,7 @@
           uploadAliImgUrl: 'https://snb-bucket.oss-cn-hangzhou.aliyuncs.com/', // 阿里云上传地址
           imgCount: 2, // 用户需要上传的图片数量
           third_product_id: 0, // 第三方产品ID
-          product_price: 1000, // 第三方产品价格
+          product_prices: {}, // 第三方产品价格map
           product_title: '', // 第三方产品标题
           assetImgUrl: '/', // 静态图片资源地址
           orderPropertyName: "properties[customisationId]", // 定制产品hash字段
@@ -79,6 +79,7 @@
         const {
           $form,
           configCache:{
+            product_prices,
             textConfig: {
               designerBtnText,
             }
@@ -110,7 +111,10 @@
 
         $container.find('.to-designer-container>a').on('click',function() {
           const body = $("html, body");
+          const currentVariantId = $form.find(`input[name="variant_id"]`).val();
+          const product_price = product_prices[currentVariantId];
           $designerArea.show();
+          $container.find('.designer-v2-money').text(`$${(product_price/100).toFixed(2)}`);
           body.stop().animate({scrollTop:0}, 500, 'swing');
         })
       }
@@ -137,9 +141,10 @@
       buildDialogHeader() {
         const {
           $designerArea,
+          $form,
           configCache: {
             assetImgUrl,
-            product_price,
+            product_prices,
             product_title,
             textConfig: {
               addToCartText,
@@ -148,6 +153,9 @@
           },
         } = this;
         const $this = this;
+        const currentVariantId = $form.find(`input[name="variant_id"]`).val();
+        const product_price = product_prices[currentVariantId];
+        
         const $dialogHeader = $(`
           <div class="designer-v2-area-header">
             <a href="javascript:void(0);" class="designer-v2-event-close">
@@ -714,16 +722,19 @@
 </script>
 
 <script>
+let product_prices = {};
+{% for variant in product.variants %}
+  product_prices["{{variant.id}}"] = "{{variant.price}}";
+{% endfor %} 
 const timmer = setInterval(function() {
   	if(window.$ && $('.product-page-main form[action="/cart/add"]').length > 0) {
       $.support.cors = true;
       new Designer({
         third_product_id: "{{product.id}}", // 图片交互接口地址
-        product_price: "{{product.price_min}}", // 产品价格
-        product_title: "{{product.title}}", // 产品价格
+        product_prices: product_prices, // 产品价格Map
+        product_title: "{{product.title}}", // 产品标题
         assetImgUrl: "{{'/icon-loading_40x.png' | asset_url}}", // loading图片资源地址
-        orderPropertyName: "properties[customisationId]", //定制产品hash字段
-        imgCount: 2,
+        imgCount: 4,
       });
       clearInterval(timmer);
 	}

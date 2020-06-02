@@ -29,7 +29,7 @@
           uploadAliImgUrl: 'https://snb-bucket.oss-cn-hangzhou.aliyuncs.com/', // 阿里云上传地址
           imgCount: 2, // 用户需要上传的图片数量
           third_product_id: 0, // 第三方产品ID
-          product_price: 1000, // 第三方产品价格
+          product_prices: {}, // 第三方产品价格map
           product_title: '', // 第三方产品标题
           assetImgUrl: '/', // 静态图片资源地址
           orderPropertyName: "properties[customisationId]", // 定制产品hash字段
@@ -73,6 +73,7 @@
         const {
           $form,
           configCache:{
+            product_prices,
             textConfig: {
               designerBtnText,
             }
@@ -104,7 +105,10 @@
 
         $container.find('.to-designer-container>a').on('click',function() {
           const body = $("html, body");
+          const currentVariantId = $form.find(`input[name="variant_id"]`).val();
+          const product_price = product_prices[currentVariantId];
           $designerArea.show();
+          $container.find('.designer-v2-money').text(`$${(product_price/100).toFixed(2)}`);
           body.stop().animate({scrollTop:0}, 500, 'swing');
         })
       }
@@ -131,9 +135,10 @@
       buildDialogHeader() {
         const {
           $designerArea,
+          $form,
           configCache: {
             assetImgUrl,
-            product_price,
+            product_prices,
             product_title,
             textConfig: {
               addToCartText,
@@ -142,6 +147,9 @@
           },
         } = this;
         const $this = this;
+        const currentVariantId = $form.find(`input[name="variant_id"]`).val();
+        const product_price = product_prices[currentVariantId];
+        
         const $dialogHeader = $(`
           <div class="designer-v2-area-header">
             <a href="javascript:void(0);" class="designer-v2-event-close">
