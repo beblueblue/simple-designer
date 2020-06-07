@@ -27,7 +27,8 @@
           uploadImgUrl: 'http://snb.lichengxx.cn/api/product/design', // 定制图片交互地址
           getAliPramsUrl: 'https://snb.lichengxx.cn/api/ossUpload', // 获取阿里云参数地址
           uploadAliImgUrl: 'https://snb-bucket.oss-cn-hangzhou.aliyuncs.com/', // 阿里云上传地址
-          imgCount: 2, // 用户需要上传的图片数量
+          imgCount: 1, // 用户需要上传的图片数量
+          ratios: [1.5], // 高宽比数组
           third_product_id: 0, // 第三方产品ID
           product_prices: {}, // 第三方产品价格map
           product_title: '', // 第三方产品标题
@@ -479,11 +480,13 @@
         );
       }
       buildDesignerBody() {
-        const {width, height, viewerRatio} = this.configCache;
+        const { currentID } = this;
+        const {width, height, ratios} = this.configCache;
         const $designerCanvasArea = $(`<div class="designer-canvas-area" data-v-${this.uniqueId} style="width: ${width}px; height: ${height}px">`);
         const $backImg = $(`<img class="designer-canvas-img" data-v-${this.uniqueId}>`);
         const $this = this;
-  
+        const viewerRatio = ratios[currentID];
+        
         $backImg.attr('src', this.imgOriginData);
         $designerCanvasArea.append(
           $(`<div class="designer-background-container" data-v-${this.uniqueId}>`).append($backImg),
