@@ -81,7 +81,7 @@ data: {
     getAliPramsUrl: 'https://snb.lichengxx.cn/api/ossUpload', // 获取阿里云参数地址
     uploadAliImgUrl: 'https://snb-bucket.oss-cn-hangzhou.aliyuncs.com/', // 阿里云上传地址
     imgCount: 2, // 用户需要上传的图片数量
-    radios: [1.5, 1.5] // 可视区域高宽比数组
+    ratios: [1.5, 1.5] // 可视区域高宽比数组
     third_product_id: 0, // 第三方产品ID
     product_price: 1000, // 第三方产品价格
     product_title: '', // 第三方产品标题

@@ -731,7 +731,7 @@ let product_prices = {};
 {% endfor %}  
 
 let imgCount = 1;
-let radios = [1.5];
+let ratios = [1.5];
 let getParamsFlag = false;
 let sendFlag = false;
 const timmer = setInterval(function() {
@@ -742,9 +742,8 @@ const timmer = setInterval(function() {
       method: 'GET',
       dataType:'json',
       success(data) {
-        console.log(data)
         imgCount = data.data.upload_num;
-        radios = data.data.width_ratio;
+        ratios = data.data.width_ratios;
         getParamsFlag = true;
       },
       error(error) {
@@ -761,7 +760,7 @@ const timmer = setInterval(function() {
       assetImgUrl: "{{'/icon-loading_40x.png' | asset_url}}", // loading图片资源地址
       orderPropertyName: "properties[customisationId]", //定制产品hash字段
       imgCount: imgCount,
-      radios: radios,
+      ratios: ratios,
     });
     clearInterval(timmer);
 	}
