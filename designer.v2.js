@@ -11,6 +11,7 @@
         this.currentID = null;
         this.OSSTYPE = 'OSSID';
         this.IMGTYPE = 'IMGTYPE';
+        this.IMG_HANDLE_FLAG = false;
 
         this.$fileInput = null;
         this.$fileInputCart = null;
@@ -235,6 +236,7 @@
         });
         $designerArea.find('.designer-v2-upload-item').on('click', function() {
           const id = $(this).data('id');
+          this.IMG_HANDLE_FLAG = false;
           $this.aliData = null;
           $this.currentID = id;
           $this.handleImgClick(id);
@@ -676,7 +678,11 @@
           }
         });
 
-        if( type === OSSTYPE && (imgCount !== ossIdCount || imgCount !== paramsCount) ) {
+        if(type === IMGTYPE) {
+          this.IMG_HANDLE_FLAG = true;
+        }
+
+        if( type === OSSTYPE && ((imgCount !== ossIdCount || imgCount !== paramsCount) || !this.IMG_HANDLE_FLAG) ) {
           return false;
         }
         
